@@ -1,4 +1,5 @@
 
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import {
   createBrowserRouter,
 } from "react-router-dom";
@@ -6,7 +7,13 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div className="text-6xl">Hello world!</div>,
+    element: <DashboardLayout/>,
+    children: [
+        {
+            path: "/",
+            element: ""
+        }
+    ]
   },
 ]);
 
