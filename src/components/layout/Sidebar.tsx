@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { FaBullhorn, FaCalendarCheck, FaMapMarkerAlt, FaUserClock } from "react-icons/fa";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { IoSave } from "react-icons/io5";
+import { LiaServerSolid } from "react-icons/lia";
 import { NavLink } from "react-router-dom";
 
 
@@ -31,6 +32,20 @@ const SideBar = () => {
                 >
                   <IoSave className="shrink-0 w-[25px] h-[25px]"></IoSave>
                   <span className="truncate text-sm font-medium">Dashboard</span>
+                </NavLink> 
+                <NavLink
+                  to="/server-monitoring"
+                  className={({ isActive }) =>
+                    cn(
+                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
+                      {
+                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
+                      }
+                    )
+                  }
+                >
+                  <LiaServerSolid className="shrink-0 w-[22px] h-[22px]"></LiaServerSolid>
+                  <span className="truncate text-sm font-medium">Server Monitoring</span>
                 </NavLink> 
     
           </nav>
