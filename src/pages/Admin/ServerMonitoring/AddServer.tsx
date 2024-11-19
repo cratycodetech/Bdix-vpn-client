@@ -32,6 +32,9 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { useState } from "react"
+import { useAddNewServerMutation } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { toast } from "sonner";
+import { useQueryClient } from "react-query";
 
 //option for multiple select
 const options = [
@@ -46,15 +49,18 @@ const options = [
 
   type TFormData = {
     serverName : string,
-    serverIPAddress : string,
-    cpuAllocation: string,
+    ipAddress : string,
+    CPUallocation: string,
     memoryAllocation  : string,
-    serverLocation : string
+    serverLocation : string,
+    serverTags : string,
   }
 
 const AddServer = () => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<TFormData>();
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [addNewServer] = useAddNewServerMutation()
+    const queryClient = useQueryClient();
 
     //handle multiple select
     const handleSelect = (value: string) => {
@@ -68,12 +74,17 @@ const AddServer = () => {
 
     //Handle submit
     const onSubmit : SubmitHandler<TFormData>= (data: any) =>{
-    // Prepare payload
-    const updatedData = { ...data, serverTags: selectedTags };
-    console.log("Updated Server Data:", updatedData);
-
-    // updateSupply(options);
-    // toast.success("Supply Updated!");
+    const toastId = toast.loading("announcement in");
+    try {
+      const updatedData = { ...data, serverTags: selectedTags };
+      console.log("updated data", updatedData);
+      addNewServer(updatedData)
+      toast.success("Server Added Successfully!", { id: toastId, duration: 2000 });
+      queryClient.invalidateQueries("server");
+      
+    } catch (error) {
+      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+    }
 };
 
     return (
@@ -112,22 +123,22 @@ const AddServer = () => {
                         Server IP Address
                       </Label>
                       <Input
-                        {...register("serverIPAddress", {
+                        {...register("ipAddress", {
                           required: "Please write server Address",
                         })}
                         className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
                         placeholder="e.g., 192.168.1.1"
                       />
-                      {errors.serverIPAddress && (
-                        <p className="text-red-500">{errors.serverIPAddress.message}</p>
+                      {errors.ipAddress && (
+                        <p className="text-red-500">{errors.ipAddress.message}</p>
                       )}
                     </div>
                     <div className="mt-4 flex items-center gap-8">
                       <div className="w-full">
-                        <Label htmlFor="cpuAllocation" className="text-[#242426] text-base">
+                        <Label htmlFor="CPUallocation" className="text-[#242426] text-base">
                           CPU Allocation
                         </Label>
-                        <Select onValueChange={(value) => setValue("cpuAllocation", value)}>
+                        <Select onValueChange={(value) => setValue("CPUallocation", value)}>
                           <SelectTrigger className="border-0 border-b text-base border-[#BFBFBF] text-[#BFBFBF] focus-visible:ring-0 focus:outline-none">
                             <SelectValue placeholder="e.g., 50%" />
                           </SelectTrigger>

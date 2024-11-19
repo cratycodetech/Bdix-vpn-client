@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     Card,
   } from "@/components/ui/card"
@@ -14,35 +15,15 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-import { IoAdd } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import AddServer from "./AddServer";
-   
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-
-  ]
-
+import { useGetAllServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import moment from "moment";
 
 
 const ServerMonitoring = () => {
+    const {data: getAllServer} = useGetAllServerQuery(undefined)
+
+
     return (
         <div className="">
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -218,21 +199,21 @@ const ServerMonitoring = () => {
                       <TableHead className="bg-[#DBDADE]">Server Name</TableHead>
                       <TableHead className="bg-[#DBDADE]">Status</TableHead>
                       <TableHead className="bg-[#DBDADE]">CPU Load</TableHead>
-                      <TableHead className="bg-[#DBDADE]">Bandwidth Usage</TableHead>
-                      <TableHead className="bg-[#DBDADE]">Active Sessions</TableHead>
+                      <TableHead className="bg-[#DBDADE]">Memory Allocation</TableHead>
                       <TableHead className="bg-[#DBDADE]">Last Update</TableHead>
                       <TableHead className="bg-[#DBDADE]">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {invoices.map((invoice) => (
-                      <TableRow key={invoice.invoice}>
-                        <TableCell className="">{invoice.invoice}</TableCell>
-                        <TableCell>{invoice.paymentStatus}</TableCell>
-                        <TableCell>{invoice.paymentMethod}</TableCell>
-                        <TableCell>{invoice.totalAmount}</TableCell>
-                        <TableCell>{invoice.totalAmount}</TableCell>
-                        <TableCell>{invoice.totalAmount}</TableCell>
+                    {getAllServer?.data?.map((list: any) => (
+                      <TableRow key={list._id}>
+                        <TableCell className="">{list?.serverName}</TableCell>
+                        <TableCell>{list?.status}</TableCell>
+                        <TableCell>{list?.CPUallocation}</TableCell>
+                        <TableCell>{list?.CPUallocation}</TableCell>
+                        <TableCell>
+                            {moment(new Date(`${list?.updatedAt}`)).format('DD MMMM YYYY') || "N/A"}
+                        </TableCell>
                         <TableCell><FaEllipsis className="w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis></TableCell>
                       </TableRow>
                     ))}
