@@ -1,6 +1,4 @@
 import { cn } from "@/lib/utils";
-import { FaBullhorn, FaCalendarCheck, FaMapMarkerAlt, FaUserClock } from "react-icons/fa";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
 import { IoSave } from "react-icons/io5";
 import { LiaServerSolid } from "react-icons/lia";
 import { NavLink } from "react-router-dom";
@@ -20,7 +18,7 @@ const SideBar = () => {
             </div>
           <nav className="flex flex-col gap-2 px-4 lg:px-5 py-1 text-[#54246D]">
                 <NavLink
-                  to="/"
+                  to="/dashboard"
                   className={({ isActive }) =>
                     cn(
                       "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
@@ -34,7 +32,7 @@ const SideBar = () => {
                   <span className="truncate text-sm font-medium">Dashboard</span>
                 </NavLink> 
                 <NavLink
-                  to="/server-monitoring"
+                  to="/dashboard/server-monitoring"
                   className={({ isActive }) =>
                     cn(
                       "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
