@@ -2,7 +2,7 @@
 import {
     Card,
   } from "@/components/ui/card"
-import {  Cpu, Hourglass, Share, TrendingUp } from "lucide-react";
+import {  Cpu, Hourglass, RefreshCcw, Share, Trash2, TrendingUp } from "lucide-react";
 import { FaEllipsis } from "react-icons/fa6";
 import { LiaServerSolid } from "react-icons/lia";
 import {
@@ -16,12 +16,40 @@ import {
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
 import AddServer from "./AddServer";
-import { useGetAllServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useDeleteServerMutation, useGetAllServerQuery, useGetCountActiveServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import moment from "moment";
+import { usePDF } from 'react-to-pdf';
+import Swal from 'sweetalert2'
+
 
 
 const ServerMonitoring = () => {
     const {data: getAllServer} = useGetAllServerQuery(undefined)
+    const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
+    const {data: getCountActiveServer} = useGetCountActiveServerQuery(undefined)
+    const [deleteServer] = useDeleteServerMutation()
+
+    //handle delete
+    const handleDelete = async(id: string) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then( async(result) => {
+        if (result.isConfirmed) {
+          await deleteServer(id).unwrap();
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success"
+          });
+        }
+      });
+    }
 
 
     return (
@@ -43,7 +71,7 @@ const ServerMonitoring = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">12</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getCountActiveServer?.data}</h1>
                                 <p className="text-[#1E1E1E] text-base">Total active servers</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -183,14 +211,13 @@ const ServerMonitoring = () => {
             <div className="mb-5 flex items-center justify-end">
                 
                 <AddServer></AddServer>
-                <Button variant="outline" className=" text-sm ml-5">
+                <Button onClick={() => toPDF()} variant="outline" className=" text-sm ml-5">
                 <div className="">
                     <Share></Share>
                 </div>Export</Button>
             </div>
 
-
-            <div className="">
+            <div className="" ref={targetRef}>
                 <Card>
                     <h1 className="text-xl font-semibold text-[#000000] px-5 py-4">Server Status Indicators</h1>
                 <Table>
@@ -201,7 +228,7 @@ const ServerMonitoring = () => {
                       <TableHead className="bg-[#DBDADE]">CPU Load</TableHead>
                       <TableHead className="bg-[#DBDADE]">Memory Allocation</TableHead>
                       <TableHead className="bg-[#DBDADE]">Last Update</TableHead>
-                      <TableHead className="bg-[#DBDADE]">Action</TableHead>
+                      <TableHead className="bg-[#DBDADE] text-center">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -210,11 +237,16 @@ const ServerMonitoring = () => {
                         <TableCell className="">{list?.serverName}</TableCell>
                         <TableCell>{list?.status}</TableCell>
                         <TableCell>{list?.CPUallocation}</TableCell>
-                        <TableCell>{list?.CPUallocation}</TableCell>
+                        <TableCell>{list?.memoryAllocation}</TableCell>
                         <TableCell>
                             {moment(new Date(`${list?.updatedAt}`)).format('DD MMMM YYYY') || "N/A"}
                         </TableCell>
-                        <TableCell><FaEllipsis className="w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis></TableCell>
+                        <TableCell>
+                            <div className="flex gap-1 items-center justify-center">
+                            <RefreshCcw className="border-r-2 pr-2 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
+                            <Trash2 onClick={() => handleDelete(list?._id)} className="w-[18px] h-[18px] text-[#1E1E1E]"></Trash2>
+                            </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
