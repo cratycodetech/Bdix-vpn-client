@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { FaEnvelope, FaLock, FaPhone, FaUser } from "react-icons/fa6";
+import { FaEnvelope, FaLock } from "react-icons/fa6";
 import { IoLogoGoogle } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useLoginMutation, useSignUpMutation } from "../redux/features/auth/authApi";
+import { useLoginMutation } from "../redux/features/auth/authApi";
 import { setUser } from "../redux/features/auth/authSlice";
 import { useAppDispatch } from "../redux/hook";
+import { googleLogin } from "@/components/providers/AuthProvider";
 
 type TFormData = {
     name : string,
@@ -46,6 +47,35 @@ const Login = () => {
       }
     }
   };
+
+  const handleGoogleLogin = async () => {
+    await googleLogin();
+  };
+
+//   const handleGoogleLogin =  async() =>{
+//     await googleLogin()
+//     .then(result =>{
+//       const loggedUser = result.user 
+//       console.log(loggedUser)
+
+//       const saveUser = {name: loggedUser?.displayName, email: loggedUser?.email, photoURL: loggedUser.photoURL}
+//       fetch('https://summer-camp-server-rimon0000.vercel.app/users',{
+//         method: 'POST',
+//         headers: {
+//           'content-type': 'application/json'
+//         },
+//         body: JSON.stringify(saveUser)
+//       })
+//       .then(res => res.json())
+//       .then(() =>{
+//       navigate(from, { replace: true });
+
+//       setSuccess('User Login successful.')
+//       setError(' ')
+
+//     })
+//   })
+// }
 
     return (
         <Container className="pt-5">  
@@ -134,7 +164,7 @@ const Login = () => {
                       <span className="w-3/12 border-b border-gray-600 lg:w-3/12 md:w-1/4"></span>
                     </div>
                     <div className="mt-4 flex items-center justify-center">
-                      <Button className="text-base py-6 rounded-xl" variant="outline">
+                      <Button onClick={handleGoogleLogin} className="text-base py-6 rounded-xl" variant="outline">
                         <IoLogoGoogle className="w-[30px] h-[30px]"></IoLogoGoogle>
                         Login with <span className="text-[#1C1C1C] font-bold">Google</span></Button>
                     </div>
