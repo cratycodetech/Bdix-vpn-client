@@ -3,9 +3,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the types for user and token
 export type TUser = {
-  name?: string,
-  email: string;
-  phone?: string,
+  name?: string | null,
+  email: string | null;
+  phone?: string | null,
   password: string;
 }
 

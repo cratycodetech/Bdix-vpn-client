@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useSignUpMutation } from "../redux/features/auth/authApi";
 import { setUser } from "../redux/features/auth/authSlice";
 import { useAppDispatch } from "../redux/hook";
+import { googleLogin } from "@/components/providers/AuthProvider";
 
 type TFormData = {
     name : string,
@@ -42,6 +43,38 @@ const Register = () => {
           } else {
             toast.error("Something went wrong!", { id: toastId, duration: 2000 });
         }
+    }
+  };
+
+  //handle google login
+  const handleGoogleLogin = async () => {
+    const toastId = toast.loading("signing up in...");
+  
+    try {
+      const result = await googleLogin();
+      const loggedUser = result?.user;
+      console.log("logged user", loggedUser);
+  
+      if (!loggedUser) {
+        toast.error("Google login failed", { id: toastId });
+        return;
+      }
+      const userInfo = {
+        name: loggedUser?.displayName,
+        email: loggedUser?.email,
+        phone: loggedUser?.phoneNumber,
+        password: "defaultPassword123", // Default password for Google users
+      };
+    
+      // Trigger login mutation
+      await signUp(userInfo).unwrap();
+      dispatch(setUser({ user: userInfo }));
+      toast.success("Registration Done.", { id: toastId, duration: 2000 });
+      navigate("/");
+  
+    } catch (err) {
+      console.error("Error during login:", err);
+      toast.error("Login failed. Please try again.", { id: toastId });
     }
   };
 
@@ -170,7 +203,7 @@ const Register = () => {
                       <span className="w-3/12 border-b border-gray-600 lg:w-3/12 md:w-1/4"></span>
                     </div>
                     <div className="mt-4 flex items-center justify-center">
-                      <Button className="text-base py-6 rounded-xl" variant="outline">
+                      <Button onClick={handleGoogleLogin} className="text-base py-6 rounded-xl" variant="outline">
                         <IoLogoGoogle className="w-[30px] h-[30px]"></IoLogoGoogle>
                         Login with <span className="text-[#1C1C1C] font-bold">Google</span></Button>
                     </div>

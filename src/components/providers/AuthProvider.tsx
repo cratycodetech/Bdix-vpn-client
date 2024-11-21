@@ -12,8 +12,9 @@ export const googleLogin = async () => {
     const user = result.user;
     console.log("User Info:", user);
 
-    // Save user info to database or handle login logic here
+    return result;
   } catch (error: any) {
     console.error("Google Login Error:", error.message);
+    throw error;
   }
 };

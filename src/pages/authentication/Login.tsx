@@ -11,7 +11,7 @@ import { IoLogoGoogle } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useLoginMutation } from "../redux/features/auth/authApi";
-import { setUser } from "../redux/features/auth/authSlice";
+import { setUser, TUserToken } from "../redux/features/auth/authSlice";
 import { useAppDispatch } from "../redux/hook";
 import { googleLogin } from "@/components/providers/AuthProvider";
 
@@ -48,35 +48,58 @@ const Login = () => {
     }
   };
 
+  // const handleGoogleLogin = async () => {
+  //   await googleLogin();
+  // };
+
+  //handle google login
   const handleGoogleLogin = async () => {
-    await googleLogin();
+    const toastId = toast.loading("Logging in...");
+  
+    try {
+      const result = await googleLogin();
+      const loggedUser = result?.user;
+      console.log("logged user", loggedUser);
+  
+      if (!loggedUser) {
+        toast.error("Google login failed", { id: toastId });
+        return;
+      }
+      const userInfo = {
+        name: loggedUser?.displayName,
+        email: loggedUser?.email,
+        phone: loggedUser?.phoneNumber,
+        password: "defaultPassword123", // Default password for Google users
+      };
+  
+      console.log("User info from Google login:", userInfo);
+  
+      // Trigger login mutation
+      await login(userInfo).unwrap();
+
+      // Retrieve the user's token
+    // const idToken = await loggedUser.getIdToken();
+    // console.log("idToken", idToken);
+
+    // Construct the token object to match TUserToken type
+    const token: TUserToken = {
+      id: loggedUser?.uid,
+      name: loggedUser.displayName ?? "Unknown User",
+      email: loggedUser.email ?? "Unknown Email",
+    };
+  
+      // Update Redux store with user data
+      // const token = loggedUser?.token;
+      dispatch(setUser({ user: userInfo, token }));
+      toast.success("Login successful", { id: toastId, duration: 2000 });
+      navigate("/");
+  
+    } catch (err) {
+      console.error("Error during login:", err);
+      toast.error("Login failed. Please try again.", { id: toastId });
+    }
   };
-
-//   const handleGoogleLogin =  async() =>{
-//     await googleLogin()
-//     .then(result =>{
-//       const loggedUser = result.user 
-//       console.log(loggedUser)
-
-//       const saveUser = {name: loggedUser?.displayName, email: loggedUser?.email, photoURL: loggedUser.photoURL}
-//       fetch('https://summer-camp-server-rimon0000.vercel.app/users',{
-//         method: 'POST',
-//         headers: {
-//           'content-type': 'application/json'
-//         },
-//         body: JSON.stringify(saveUser)
-//       })
-//       .then(res => res.json())
-//       .then(() =>{
-//       navigate(from, { replace: true });
-
-//       setSuccess('User Login successful.')
-//       setError(' ')
-
-//     })
-//   })
-// }
-
+  
     return (
         <Container className="pt-5">  
             <div className="flex items-center justify-center">
