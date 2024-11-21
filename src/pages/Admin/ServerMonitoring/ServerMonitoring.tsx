@@ -8,6 +8,7 @@ import { LiaServerSolid } from "react-icons/lia";
 import {
     Table,
     TableBody,
+    TableCaption,
     TableCell,
     TableFooter,
     TableHead,
@@ -21,6 +22,50 @@ import moment from "moment";
 import { usePDF } from 'react-to-pdf';
 import Swal from 'sweetalert2'
 
+const lists = [
+    {
+      list: "INV001",
+      paymentStatus: "Paid",
+      totalAmount: "$250.00",
+      paymentMethod: "Credit Card",
+    },
+    {
+      list: "INV002",
+      paymentStatus: "Pending",
+      totalAmount: "$150.00",
+      paymentMethod: "PayPal",
+    },
+    {
+      list: "INV003",
+      paymentStatus: "Unpaid",
+      totalAmount: "$350.00",
+      paymentMethod: "Bank Transfer",
+    },
+    {
+      list: "INV004",
+      paymentStatus: "Paid",
+      totalAmount: "$450.00",
+      paymentMethod: "Credit Card",
+    },
+    {
+      list: "INV005",
+      paymentStatus: "Paid",
+      totalAmount: "$550.00",
+      paymentMethod: "PayPal",
+    },
+    {
+      list: "INV006",
+      paymentStatus: "Pending",
+      totalAmount: "$200.00",
+      paymentMethod: "Bank Transfer",
+    },
+    {
+      list: "INV007",
+      paymentStatus: "Unpaid",
+      totalAmount: "$300.00",
+      paymentMethod: "Credit Card",
+    },
+  ]
 
 
 const ServerMonitoring = () => {
@@ -219,40 +264,45 @@ const ServerMonitoring = () => {
 
             <div className="" ref={targetRef}>
                 <Card>
-                    <h1 className="text-xl font-semibold text-[#000000] px-5 py-4">Server Status Indicators</h1>
-                <Table>
-                  <TableHeader>
-                    <TableRow className="text-[#000000] text-sm">
-                      <TableHead className="bg-[#DBDADE]">Server Name</TableHead>
-                      <TableHead className="bg-[#DBDADE]">Status</TableHead>
-                      <TableHead className="bg-[#DBDADE]">CPU Load</TableHead>
-                      <TableHead className="bg-[#DBDADE]">Memory Allocation</TableHead>
-                      <TableHead className="bg-[#DBDADE]">Last Update</TableHead>
-                      <TableHead className="bg-[#DBDADE] text-center">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {getAllServer?.data?.map((list: any) => (
-                      <TableRow key={list._id}>
-                        <TableCell className="">{list?.serverName}</TableCell>
-                        <TableCell>{list?.status}</TableCell>
-                        <TableCell>{list?.CPUallocation}</TableCell>
-                        <TableCell>{list?.memoryAllocation}</TableCell>
-                        <TableCell>
-                            {moment(new Date(`${list?.updatedAt}`)).format('DD MMMM YYYY') || "N/A"}
-                        </TableCell>
-                        <TableCell>
-                            <div className="flex gap-1 items-center justify-center">
-                            <RefreshCcw className="border-r-2 pr-2 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
-                            <Trash2 onClick={() => handleDelete(list?._id)} className="w-[18px] h-[18px] text-[#1E1E1E]"></Trash2>
-                            </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                  <TableFooter>
-                  </TableFooter>
-                </Table>
+                    <div className="p-3">
+                        <div className="px-4 py-3">
+                            <h1 className="text-xl font-semibold text-[#000000] leading-7">Server Status Indicators</h1>
+                        </div>
+                        <Table>
+                          <TableCaption>A list of your credit management.</TableCaption>
+                          <TableHeader className="bg-[#F0F4FA]">
+                            <TableRow className="border-b border-[#DBDADE]">
+                              <TableHead className="text-[#000000] font-medium text-base">Server Name</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">Status </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">CPU Load</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">memory Allocation</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">Last Update</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">Action</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {getAllServer?.data?.map((list: any) => (
+                              <TableRow key={list._id}>
+                                <TableCell className="">{list.serverName}</TableCell>
+                                <TableCell>{list?.status}</TableCell>
+                                <TableCell>{list?.CPUallocation}</TableCell>
+                                <TableCell>{list?.memoryAllocation}</TableCell>
+                                <TableCell>
+                                {moment(new Date(`${list?.updatedAt}`)).format('DD MMMM YYYY') || "N/A"}
+                                </TableCell>
+                                <TableCell className="">
+                                    <div className="flex gap-1 items-center justify-center">
+                                    <RefreshCcw className="border-r-2 pr-2 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
+                                    <Trash2 onClick={() => handleDelete(list?._id)} className="w-[18px] h-[18px] text-[#1E1E1E]"></Trash2>
+                                    </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+
+                    </div>
+             
                 </Card>
             </div>
         </div>

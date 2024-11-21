@@ -13,7 +13,7 @@ const TopBar = () => {
     return (
         <div className="text-[#000000] lg:h-[90px] lg:flex justify-between items-center gap-5 mx-5 border-b border-[#0000001A]">
             <div className="">
-                <h1 className="text-3xl font-semibold">Reseller Management Overview</h1>
+                <h1 className="text-3xl font-semibold">Admin Management</h1>
             </div>
             <div className="flex items-center gap-3">
             <div>

@@ -1,6 +1,7 @@
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import MainLayout from "@/components/layout/MainLayout";
+import CreditManagement from "@/pages/Admin/CreditManagement/creditManagement";
 import Dashboard from "@/pages/Admin/dashboard/Dashboard";
 import ServerMonitoring from "@/pages/Admin/ServerMonitoring/ServerMonitoring";
 import ForgotPassword from "@/pages/authentication/ForgotPassword";
@@ -46,7 +47,11 @@ const router = createBrowserRouter([
         {
           path: "server-monitoring",
           element: <ServerMonitoring/>
-      }, 
+        }, 
+        {
+          path: "credit-management",
+          element: <CreditManagement/>
+        },
     ]
   },
 ]);

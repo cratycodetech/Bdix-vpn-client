@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { FolderCog } from "lucide-react";
 import { IoSave } from "react-icons/io5";
 import { LiaServerSolid } from "react-icons/lia";
 import { NavLink } from "react-router-dom";
@@ -18,7 +19,7 @@ const SideBar = () => {
             </div>
           <nav className="flex flex-col gap-2 px-4 lg:px-5 py-1 text-[#54246D]">
                 <NavLink
-                  to="/dashboard"
+                  to="/"
                   className={({ isActive }) =>
                     cn(
                       "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
@@ -44,6 +45,20 @@ const SideBar = () => {
                 >
                   <LiaServerSolid className="shrink-0 w-[22px] h-[22px]"></LiaServerSolid>
                   <span className="truncate text-sm font-medium">Server Monitoring</span>
+                </NavLink> 
+                <NavLink
+                  to="/dashboard/credit-management"
+                  className={({ isActive }) =>
+                    cn(
+                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
+                      {
+                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
+                      }
+                    )
+                  }
+                >
+                  <FolderCog className="shrink-0 w-[2opx] h-[20px]"></FolderCog>
+                  <span className="truncate text-sm font-medium">Credit Management</span>
                 </NavLink> 
     
           </nav>

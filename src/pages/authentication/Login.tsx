@@ -10,7 +10,7 @@ import { FaEnvelope, FaLock } from "react-icons/fa6";
 import { IoLogoGoogle } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useLoginMutation } from "../redux/features/auth/authApi";
+import { useLoginMutation, useSendOTPMutation, useVerifyOTPMutation } from "../redux/features/auth/authApi";
 import { setUser, TUserToken } from "../redux/features/auth/authSlice";
 import { useAppDispatch } from "../redux/hook";
 import { googleLogin } from "@/components/providers/AuthProvider";
@@ -23,11 +23,51 @@ type TFormData = {
   }
 
 const Login = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<TFormData>();
+    const { register, handleSubmit, formState: { errors }, watch } = useForm<TFormData>();
     const [showPassword, setShowPassword] = useState(false);
     const [login] = useLoginMutation()
     const dispatch = useAppDispatch()
     const navigate = useNavigate();
+
+    // //2FA functionality
+    // const [otp, setOtp] = useState("");
+    // const [isOTPRequested, setIsOTPRequested] = useState(false);
+
+    // const [sendOTP] = useSendOTPMutation();
+    // const [verifyOTP] = useVerifyOTPMutation();
+
+  //    // Handle sending OTP
+  //   const handleSendOTP = async () => {
+  //     const email = watch("email");
+  //     console.log("hitting handle send otp with email: ", email); // Ensure email is being passed correctly
+  //     const toastId = toast.loading("Sending OTP...");
+  //     try {
+  //       const result = await sendOTP({ email }, {
+  //         headers: {
+  //           Authorization: `Bearer ${yourAuthToken}`, // Include auth token if needed
+  //         },
+  //       }).unwrap();
+  //       console.log("OTP sent successfully:", result);
+  //       toast.success("OTP sent successfully.", { id: toastId });
+  //       setIsOTPRequested(true);
+    
+  //     } catch (error) {
+  //         console.error("Error sending OTP:", error); // Log error for debugging
+  //         toast.error("Failed to send OTP.", { id: toastId });
+  //     }
+  // };
+
+    //  // Handle OTP verification
+    //   const handleVerifyOTP = async () => {
+    //     const toastId = toast.loading("Verifying OTP...");
+    //     try {
+    //       await verifyOTP({ email: "user-email-placeholder", otp }).unwrap();
+    //       toast.success("OTP verified successfully.", { id: toastId });
+    //       navigate("/"); // Navigate after successful OTP verification
+    //     } catch (error) {
+    //       toast.error("Invalid OTP.", { id: toastId });
+    //     }
+    //   };
 
   //handle login
   const onSubmit : SubmitHandler<TFormData> = async (data) => {
@@ -131,7 +171,19 @@ const Login = () => {
                         {errors.email && (
                           <p className="text-sm text-red-500">{errors.email.message}</p>
                         )}
-                      </div>         
+                      </div>   
+
+                      {/* Request OTP Button */}
+                      {/* {!isOTPRequested && (
+                        <Button
+                          type="button"
+                          className="w-full bg-[#4406CB] text-[#FFFFFF] text-base font-semibold"
+                          onClick={handleSendOTP} // Calling handleSendOTP here
+                        >
+                          Send OTP
+                        </Button>
+                      )}      */}
+                       
                       {/* Password */}
                       <div className="space-y-2">
                         <div className="flex justify-between">
@@ -172,6 +224,21 @@ const Login = () => {
                       <Button type="submit" className="w-full bg-[#4406CB] text-[#FFFFFF] text-base font-semibold">
                         Login
                       </Button>
+
+                      {/* OTP Logic */}
+                       {/* {isOTPRequested && (
+                        <div>
+                          <h3>Enter OTP</h3>
+                          <input
+                            type="text"
+                            value={otp}
+                            // onChange={(e) => setOtp(e.target.value)}
+                            placeholder="Enter OTP"
+                          />
+                          <Button onClick={handleVerifyOTP}>Verify OTP</Button>
+                        </div>
+                      )} */}
+
                     </form>
                     
                     <div className="flex items-center justify-between mt-4">
