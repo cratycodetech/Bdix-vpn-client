@@ -2,12 +2,10 @@
 import {
     Menubar,
     MenubarContent,
-    MenubarItem,
     MenubarMenu,
     MenubarTrigger,
   } from "@/components/ui/menubar"
-import { Award, BadgeCheck, BellRing, CircleUserRound } from "lucide-react";
-import { Button } from "../ui/button";
+import {BellRing, CircleUserRound, X } from "lucide-react";
 
 const TopBar = () => {
     return (
@@ -20,37 +18,77 @@ const TopBar = () => {
               <Menubar className=" border-none bg-[#F0F4FA]">
                 <MenubarMenu>
                   <MenubarTrigger><BellRing className="text-[#FFA412] w-[18px] h-[18px]"></BellRing></MenubarTrigger>
-                  <MenubarContent className="p-4 max-w-[400px]">
-                    <h1 className="text-2xl mb-2 font-semibold">Notifications</h1>
-                    <hr />
-                    <MenubarItem className="flex gap-1 mt-2">
-                    <CircleUserRound className="h-[35px] w-[35px]"></CircleUserRound>
-                    <div>
-                      <p className="px-2 font-semibold">New Donation: <span className="font-normal"> $50 from John Doe. Check dashboard.</span></p>
-                      <p className="pl-2 text-blue-900">11.22 AM</p>
-                    </div> 
-                    </MenubarItem>
-
-                    <MenubarItem className="flex gap-1">
-                    <Award className="h-[35px] w-[35px]"></Award>
-                    <div>
-                      <p className="px-2 font-semibold">Goal Achieved: <span className="font-normal"> $10,000 goal reached! Set new targets.</span></p>
-                      <p className="pl-2 text-blue-900">2 hours age</p>
-                    </div> 
-                    </MenubarItem>
-
-                    <MenubarItem className="flex gap-1">
-                    <BadgeCheck className="h-[35px] w-[35px]"></BadgeCheck>
-                    <div>
-                      <p className="px-2 font-semibold">Monthly Summary:<span className="font-normal"> $5,000 from 100 donors. See report.</span></p>
-                      <p className="pl-2 text-blue-900">6 hours age</p>
-                    </div> 
-                    </MenubarItem>
-                    <MenubarItem className="mt-4">
-                      <Button className="w-full">View All</Button> 
-                    </MenubarItem>
-                    
-
+                  <MenubarContent className="p-4 max-w-[400px]">                
+                    <div className="max-w-md mx-auto space-y-4">
+                      {/* Notification 1 */}
+                      <div className="flex items-start justify-between p-3 border rounded-lg shadow-sm">
+                        <div className="flex items-center space-x-4">
+                          <div className="">
+                              <CircleUserRound className="h-[30px] w-[30px] "></CircleUserRound>
+                          </div>
+                          <div>
+                            <div>
+                              <p className="font-semibold">Notification Title:<span className="font-normal"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, soluta.</span></p>
+                            </div>
+                            <p className="text-sm pl-2 text-blue-900">10 mins ago</p>
+                          </div>
+                        </div>
+                        <button className="ml-4 text-gray-400 hover:text-gray-600">
+                            <X className="w-[18px] h-[18px]"></X>
+                        </button>
+                      </div>
+                      {/* Notification 2 */}
+                      <div className="flex items-start justify-between p-3 border rounded-lg shadow-sm">
+                        <div className="flex items-center space-x-4">
+                          <div className="">
+                              <CircleUserRound className="h-[30px] w-[30px] "></CircleUserRound>
+                          </div>
+                          <div>
+                            <div>
+                              <p className="font-semibold">Notification Title:<span className="font-normal"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, soluta.</span></p>
+                            </div>
+                            <p className="text-sm pl-2 text-blue-900">10 mins ago</p>
+                          </div>
+                        </div>
+                        <button className="ml-4 text-gray-400 hover:text-gray-600">
+                            <X className="w-[18px] h-[18px]"></X>
+                        </button>
+                      </div>
+                
+                      {/* Success Notification */}
+                      <div className="flex items-start justify-between p-3 rounded-lg shadow-sm bg-[#4E8D7C] text-white">
+                        <div className="flex items-center  space-x-4">
+                          <div className="w-10 h-10 bg-[#133B5C] flex items-center justify-center rounded-full">
+                            ✔ 
+                          </div>
+                          <div>
+                            <h4 className="font-semibold">Well done!</h4>
+                            <p className="text-sm">You successfully read this important message.</p>
+                          </div>
+                        </div>
+                        <button className="ml-4 text-gray-400 hover:text-white">
+                            <X className="w-[18px] h-[18px]"></X>
+                        </button>
+                      </div>
+                
+                      {/* Error Notification */}
+                      <div className="flex items-start justify-between p-3 rounded-lg shadow-sm bg-red-100">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-[60px] h-[40px] text-white bg-[#EB5757] flex items-center justify-center rounded-full">
+                              <X className="w-[18px] h-[18px]"></X>
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-lg text-[#2F3032]">Error Title</h4>
+                            <p className="text-sm text-[#2F3032]">
+                              Payment for order could not be processed. Please try again.
+                            </p>
+                          </div>
+                        </div>
+                        <button className="ml-4 text-gray-400 hover:text-white">
+                            <X className="w-[18px] h-[18px]"></X>
+                        </button>
+                      </div>
+                    </div>               
                   </MenubarContent>
                 </MenubarMenu>
               </Menubar>

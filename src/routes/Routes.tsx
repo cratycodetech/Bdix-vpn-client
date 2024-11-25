@@ -4,6 +4,7 @@ import MainLayout from "@/components/layout/MainLayout";
 import AdsCampaign from "@/pages/Admin/AdsCampaign/AdsCampaign";
 import CreditManagement from "@/pages/Admin/CreditManagement/creditManagement";
 import Dashboard from "@/pages/Admin/dashboard/Dashboard";
+import ReportsAndAnalysis from "@/pages/Admin/ReportsAndAnalysis/ReportsAndAnalysis";
 import ResellerManagement from "@/pages/Admin/ResellerManagement/ResellerManagement";
 import ServerMonitoring from "@/pages/Admin/ServerMonitoring/ServerMonitoring";
 import Settings from "@/pages/Admin/Settings/Settings";
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
         {
           path: "reseller-management",
           element: <ResellerManagement/>
+        },
+        {
+          path: "reports-analysis",
+          element: <ReportsAndAnalysis/>
         },
         {
           path: "settings",

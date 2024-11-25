@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner";
 import { useQueryClient } from "react-query";
-import { Check } from "lucide-react";
+import { Ban, Check, Eye, PencilLine } from "lucide-react";
 
 type TFormData = {
   fullName : string,
@@ -34,7 +34,7 @@ type TFormData = {
   resellerAssignment: string,
 }
 
-const AddNewUser = () => {
+const EditUser = () => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<TFormData>();
   const queryClient = useQueryClient();
 
@@ -57,16 +57,11 @@ const AddNewUser = () => {
       <div className="">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-            <Button className="bg-[#4406CB] text-[#FFFFFF] text-sm">
-              <div className="border rounded-full bg-white text-[#4406CB]">
-                  <IoAdd></IoAdd>
-              </div>
-              Add New User</Button>
-
+                <PencilLine className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></PencilLine>
             </AlertDialogTrigger>
             <AlertDialogContent className="border">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-3xl text-center text-[#2B2D42] font-bold">NEW USER</AlertDialogTitle>
+                <AlertDialogTitle className="text-3xl text-center text-[#2B2D42] font-bold">EDIT USER</AlertDialogTitle>
               </AlertDialogHeader>
               <form onSubmit={handleSubmit(onSubmit)} className="border p-4 rounded-xl">
                 <div className="space-y-5">
@@ -140,9 +135,10 @@ const AddNewUser = () => {
             
                 </div>
                 <AlertDialogFooter className="mt-4">
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel className="bg-[#C5B2EF]"> <Ban /> Cancel
+                  </AlertDialogCancel>
                   <AlertDialogAction>
-                    <Button type="submit"><Check />Save</Button>
+                    <Button type="submit"><Check /> Confirm</Button>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </form>
@@ -152,4 +148,4 @@ const AddNewUser = () => {
   );
 };
 
-export default AddNewUser;
+export default EditUser;

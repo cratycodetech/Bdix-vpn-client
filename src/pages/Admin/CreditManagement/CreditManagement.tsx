@@ -2,7 +2,7 @@
 import {
     Card,
   } from "@/components/ui/card"
-import {  CircleDollarSign, DollarSign, RefreshCcw, Share, Trash2, TrendingUp, TriangleAlert } from "lucide-react";
+import {  CircleDollarSign, DollarSign, Filter, RefreshCcw, Share, Trash2, TrendingUp, TriangleAlert } from "lucide-react";
 import { FaEllipsis, FaShare } from "react-icons/fa6";
 import {
     Table,
@@ -304,10 +304,30 @@ const CreditManagement = () => {
                           <TableCaption>A list of your credit management.</TableCaption>
                           <TableHeader className="bg-[#F0F4FA]">
                             <TableRow className="border-b border-[#DBDADE]">
-                              <TableHead className="text-[#000000] font-medium text-base">Transaction ID</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Date</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">credit Amount</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Assigned To</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Transaction ID
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                    Date
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                      credit Amount
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Assigned To
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
                               <TableHead className="text-[#000000] font-medium text-base">balance After</TableHead>
                               <TableHead className="text-[#000000] font-medium text-base">Action</TableHead>
                             </TableRow>
@@ -327,7 +347,6 @@ const CreditManagement = () => {
                             ))}
                           </TableBody>
                         </Table>
-
                     </div>
              
                 </Card>

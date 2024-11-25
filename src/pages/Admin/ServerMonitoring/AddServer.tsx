@@ -35,6 +35,7 @@ import { useState } from "react"
 import { useAddNewServerMutation } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import { toast } from "sonner";
 import { useQueryClient } from "react-query";
+import { Ban, Check } from "lucide-react";
 
 //option for multiple select
 const options = [
@@ -133,48 +134,6 @@ const AddServer = () => {
                         <p className="text-red-500">{errors.ipAddress.message}</p>
                       )}
                     </div>
-                    <div className="mt-4 flex items-center gap-8">
-                      <div className="w-full">
-                        <Label htmlFor="CPUallocation" className="text-[#242426] text-base">
-                          CPU Allocation
-                        </Label>
-                        <Select onValueChange={(value) => setValue("CPUallocation", value)}>
-                          <SelectTrigger className="border-0 border-b text-base border-[#BFBFBF] text-[#BFBFBF] focus-visible:ring-0 focus:outline-none">
-                            <SelectValue placeholder="e.g., 50%" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>CPU Allocation</SelectLabel>
-                              {["10%", "20%", "50%", "100%"].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="w-full">
-                        <Label htmlFor="memoryAllocation" className="text-[#242426] text-base">
-                          Memory Allocation
-                        </Label>
-                        <Select onValueChange={(value) => setValue("memoryAllocation", value)}>
-                          <SelectTrigger className="border-0 border-b text-base border-[#BFBFBF] text-[#BFBFBF] focus-visible:ring-0 focus:outline-none">
-                            <SelectValue placeholder="e.g., 50%" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Memory Allocation</SelectLabel>
-                              {["4gb", "8gb", "16gb", "32gb"].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
                     <div className="mt-4">
                         <Label htmlFor="serverLocation" className="text-[#242426] text-base">
                           Server Location
@@ -233,11 +192,12 @@ const AddServer = () => {
                     </div>
                   </div>
                   <AlertDialogFooter className="mt-4">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>
-                      <Button type="submit">Confirm</Button>
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
+                  <AlertDialogCancel className="bg-[#C5B2EF]"> <Ban /> Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction>
+                    <Button type="submit"><Check /> Confirm</Button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
                 </form>
               </AlertDialogContent>
             </AlertDialog>

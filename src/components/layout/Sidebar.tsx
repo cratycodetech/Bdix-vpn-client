@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { FolderCog } from "lucide-react";
+import { ChartNoAxesCombined, FolderCog } from "lucide-react";
 import { FaBagShopping, FaBullhorn, FaUser } from "react-icons/fa6";
 import { IoSave } from "react-icons/io5";
 import { LiaServerSolid } from "react-icons/lia";
@@ -63,20 +63,6 @@ const SideBar = () => {
                   <span className="truncate text-sm font-medium">Reseller Management</span>
                 </NavLink>
                 <NavLink
-                  to="/dashboard/server-monitoring"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <LiaServerSolid className="shrink-0 w-[22px] h-[22px]"></LiaServerSolid>
-                  <span className="truncate text-sm font-medium">Server Monitoring</span>
-                </NavLink> 
-                <NavLink
                   to="/dashboard/credit-management"
                   className={({ isActive }) =>
                     cn(
@@ -104,6 +90,35 @@ const SideBar = () => {
                   <FaBullhorn className="shrink-0 w-[2opx] h-[20px]"></FaBullhorn>
                   <span className="truncate text-sm font-medium">Ads Campaign</span>
                 </NavLink> 
+                <NavLink
+                  to="/dashboard/server-monitoring"
+                  className={({ isActive }) =>
+                    cn(
+                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
+                      {
+                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
+                      }
+                    )
+                  }
+                >
+                  <LiaServerSolid className="shrink-0 w-[22px] h-[22px]"></LiaServerSolid>
+                  <span className="truncate text-sm font-medium">Server Monitoring</span>
+                </NavLink> 
+                <NavLink
+                  to="/dashboard/reports-analysis"
+                  className={({ isActive }) =>
+                    cn(
+                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
+                      {
+                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
+                      }
+                    )
+                  }
+                >
+                  
+                  <ChartNoAxesCombined className="shrink-0 w-[2opx] h-[20px]"></ChartNoAxesCombined>
+                  <span className="truncate text-sm font-medium">Reports & Analysis</span>
+                </NavLink>
                 <NavLink
                   to="/dashboard/settings"
                   className={({ isActive }) =>

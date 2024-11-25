@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { CircleDollarSign, Cog, Files, Fingerprint, Hourglass, MonitorCog, PencilOff, Receipt, TrendingUp } from "lucide-react";
+import { Check, CircleDollarSign, Cog, Files, Fingerprint, Hourglass, MonitorCog, PencilOff, Receipt, TrendingUp } from "lucide-react";
 import { FaEllipsis } from "react-icons/fa6";
 import {
     Select,
@@ -14,6 +14,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const AdsCampaign = () => {
     const [activeSidebar, setActiveSidebar] = useState(1);
@@ -48,7 +49,7 @@ const AdsCampaign = () => {
                     </Card>
                 </div>
                 <div>
-                    <Card className="px-3 py-4">
+                    <Card className="p-4">
                         <div className="flex items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
                                 <div className="bg-[#BE62FA] rounded-full">
@@ -60,16 +61,17 @@ const AdsCampaign = () => {
                                 <FaEllipsis className="w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis>
                             </div>
                         </div>
-                        <div className="mt-5 flex items-center gap- gap-2">
+                        <div className="mt-5 flex items-center justify-between gap-5">
                             <div>
                                 <h1 className="text-[#2B2D42] text-4xl font-bold">7,500</h1>
-                                <p className="text-[#1E1E1E] text-base">Total revenue generated</p>
+                               
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
                                 <TrendingUp className="w-[15px]"></TrendingUp>
                                 <p className="">0.3%</p>
                             </div>
                         </div>
+                        <p className="text-[#1E1E1E] text-base">Total revenue generated</p>
                     </Card>
                 </div>
                 <div>
@@ -86,16 +88,16 @@ const AdsCampaign = () => {
                                 <FaEllipsis className="w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis>
                             </div>
                         </div>
-                        <div className="mt-5 flex items-center  gap-2">
+                        <div className="mt-5 flex items-center justify-between  gap-5">
                             <div>
                                 <h1 className="text-[#2B2D42] text-4xl font-bold">156k</h1>
-                                <p className="text-[#1E1E1E] text-base">Total sessions generate</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
                                 <TrendingUp className="w-[15px]"></TrendingUp>
                                 <p className="">20%</p>
                             </div>
                         </div>
+                        <p className="text-[#1E1E1E] text-base">Total sessions generate</p>
                     </Card>
                 </div>
                 <div>
@@ -180,12 +182,15 @@ const AdsCampaign = () => {
                                 <Input className="mt-1 w-full" type="text" placeholder="e.g., ca-app-pub-1234567890/9876543210" />
                             </div>
                         </div>
+                        <div className="mt-7 flex items-center justify-end">
+                            <Button className="bg-[#4406CB]"><Check /> Confirm</Button>
+                        </div>
                     </Card>
                     )}
 
                     {activeSidebar === 2 && (
                     <Card className="content-2 px-5 py-8">
-                        <h1 className="text-[#000000] text-xl font-semibold flex items-center gap-1">Ads Display Control <span className="border bg-[#3B3B3B] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></h1>
+                        <h1 className="text-[#000000] text-xl font-semibold flex items-center gap-1">Ads Display Control <span className="bg-[#3B3B3B] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></h1>
                         <div className="mt-3">
                             <h1 className="text-[#595959] font-semibold text-base">Enable Ads for Free User</h1>
                             <p className="text-[#737373] text-sm">Enable or disable ads displayed to free users on the platform.</p>
@@ -200,12 +205,15 @@ const AdsCampaign = () => {
                               <Switch className="text-[#BE62FA]" id="airplane-mode" />
                             </div>
                         </div> 
+                        <div className="mt-7 flex items-center justify-end">
+                            <Button className="bg-[#4406CB]"><Check /> Confirm</Button>
+                        </div>
                     </Card>
                     )}
 
                     {activeSidebar === 3 && (
                     <Card className="content-3 px-5 py-8">
-                        <h1 className="text-[#000000] text-xl font-semibold flex items-center gap-1">Ad Frequency Control <span className="border bg-[#3B3B3B] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></h1>
+                        <h1 className="text-[#000000] text-xl font-semibold flex items-center gap-1">Ad Frequency Control <span className="bg-[#3B3B3B] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></h1>
                         <div className="mt-3">
                             <h1 className="mb-1 text-[#595959] font-semibold text-base">Control how often ads are shown to free users.</h1>
                             <Select>
@@ -247,6 +255,9 @@ const AdsCampaign = () => {
                             <Files className="text-[#A5A5A5]"></Files>
                             <a className="text-[#5D5D5D] text-xs" href="https://dummy.restapiexample.com/api/v1/employees">https://dummy.restapiexample.com/api/v1/employees</a>
                             </div>
+                        </div>
+                        <div className="mt-7 flex items-center justify-end">
+                            <Button className="bg-[#4406CB]"><Check /> Confirm</Button>
                         </div>
                     </Card>
                     )}

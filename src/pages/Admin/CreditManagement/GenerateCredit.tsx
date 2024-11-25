@@ -25,10 +25,12 @@ import {
   } from "@/components/ui/select"
 import { toast } from "sonner";
 import { useQueryClient } from "react-query";
+import { Ban, Check } from "lucide-react";
 
 type TFormData = {
     creditAmount : string,
     reseller : string,
+    userId : string,
     remarks: string,
   }
 
@@ -79,13 +81,13 @@ const GenerateCredit = () => {
                       />
                       {errors.creditAmount && <p className="text-red-500">{errors.creditAmount.message}</p>}
                     </div>
-                      <div className="w-full">
+                    <div className="w-full">
                         <Label htmlFor="assignTo" className="text-[#242426] text-base">
                           Assign To
                         </Label>
                         <Select onValueChange={(value) => setValue("reseller", value)}>
                           <SelectTrigger className="border-0 border-b text-base border-[#BFBFBF] text-[#BFBFBF] focus-visible:ring-0 focus:outline-none">
-                            <SelectValue placeholder="Select Reseller" />
+                            <SelectValue placeholder="Select Reseller / Premium User" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
@@ -98,7 +100,18 @@ const GenerateCredit = () => {
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="userId" className="text-[#242426] text-base">
+                          Reseller/Premium User ID
+                      </Label>
+                      <Input
+                        {...register("creditAmount", { required: "Please write credit amount" })}
+                        className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
+                        placeholder="Enter ID"
+                      />
+                      {errors.userId && <p className="text-red-500">{errors.userId.message}</p>}
+                    </div>
                   
                     <div className="mt-4">
                       <Label htmlFor="remarks" className="text-[#242426] text-base">
@@ -109,7 +122,7 @@ const GenerateCredit = () => {
                           required: "Please write remarks if you want",
                         })}
                         className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
-                        placeholder="Please write remarks if you want"
+                        placeholder="add notes...."
                       />
                       {errors.remarks && (
                         <p className="text-red-500">{errors.remarks.message}</p>
@@ -118,9 +131,10 @@ const GenerateCredit = () => {
                    
                   </div>
                   <AlertDialogFooter className="mt-4">
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="bg-[#C5B2EF]"> <Ban /> Cancel
+                    </AlertDialogCancel>
                     <AlertDialogAction>
-                      <Button type="submit">Confirm</Button>
+                      <Button type="submit"><Check /> Confirm</Button>
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </form>

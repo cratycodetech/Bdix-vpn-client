@@ -8,8 +8,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { toast } from "sonner";
-import { useQueryClient } from "react-query";
 import {Mail } from "lucide-react";
 import { FaEllipsis, FaLocationArrow, FaPen, FaPhone } from "react-icons/fa6";
 import {
@@ -60,9 +58,6 @@ const invoices = [
 
 
 const ResellerDetails = () => {
-    const tags = Array.from({ length: 50 }).map(
-        (_, i, a) => `v1.2.0-beta.${a.length - i}`
-      )
 
   return (
       <div className="">
@@ -73,9 +68,9 @@ const ResellerDetails = () => {
             <AlertDialogContent className="border">
               <AlertDialogHeader>
               </AlertDialogHeader>
-              <div className="flex items-center justify-start gap-5">
+              <div className="flex items-center justify-start gap-5 px-4">
                 <div>
-                    <img className="w-[100px] h-[100px] rounded-full" src="https://i.ibb.co.com/rxsrLYF/Ellipse-459.webp" alt="" />
+                    <img className="w-[80px] h-[80px] rounded-full" src="https://i.ibb.co.com/rxsrLYF/Ellipse-459.webp" alt="" />
                 </div>
                 <div>
                     <h1 className="text-[#2B2D42] font-semibold text-3xl">Alfred Maxwell</h1>
@@ -92,6 +87,7 @@ const ResellerDetails = () => {
                     <p className="text-[#3B3B3B] font-medium text-xl">+880 1345118027</p>
                 </div>
               </div>
+
               <div className="flex items-center justify-center gap-5">
                 <Button className="text-[#4406CB] border-[#4406CB] text-xl font-medium" variant="outline"> Edit Info <FaPen className="w-[24px] h-[24px]"></FaPen></Button>
                 <Button className="text-[#737373] border-[#737373] text-xl font-medium" variant="outline"> Send Message <FaLocationArrow className="w-[30px] h-[30px]"></FaLocationArrow></Button>
@@ -104,9 +100,9 @@ const ResellerDetails = () => {
                               <TableCaption>A list of your user management.</TableCaption>
                               <TableHeader className="bg-[#F0F4FA]">
                                 <TableRow className="border-b border-[#DBDADE]">
-                                  <TableHead className="text-[#000000] font-medium text-base">User Name</TableHead>
-                                  <TableHead className="text-[#000000] font-medium text-base">Subscription</TableHead>
-                                  <TableHead className="text-[#000000] font-medium text-base">Credits Assigned</TableHead>
+                                  <TableHead className="text-[#8B909A] font-medium text-sm">User Name</TableHead>
+                                  <TableHead className="text-[#8B909A] font-medium text-sm">Subscription</TableHead>
+                                  <TableHead className="text-[#8B909A] font-medium text-sm">Credits Assigned</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>

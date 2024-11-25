@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowDownToLine, EllipsisVertical, Newspaper, Share, TrendingUp } from "lucide-react";
+import { ArrowDownToLine, EllipsisVertical, Filter, Newspaper, PencilLine, Share, Trash2, TrendingUp } from "lucide-react";
 import { usePDF } from "react-to-pdf";
 import {
     Table,
@@ -13,8 +13,8 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-import { FaEllipsis } from "react-icons/fa6";
-import AddNewUser from "./AddNewUser";
+import UserDetails from "./UserDetails";
+import EditUser from "./EditUser";
 
 const invoices = [
     {
@@ -189,7 +189,7 @@ const UserManagement = () => {
             </div>
 
             <div className="mb-7 flex items-center justify-end">
-                <AddNewUser></AddNewUser>
+                
                 <Button onClick={() => toPDF()} variant="outline" className=" text-sm ml-5">
                 <div className="">
                     <Share></Share>
@@ -203,12 +203,37 @@ const UserManagement = () => {
                           <TableCaption>A list of your user management.</TableCaption>
                           <TableHeader className="bg-[#F0F4FA]">
                             <TableRow className="border-b border-[#DBDADE]">
-                              <TableHead className="text-[#000000] font-medium text-base">User ID</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Email</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Subscription Status</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Credits</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Reseller Reference</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Action</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                User ID
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Email
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Subscription Status
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                  Credits
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Reseller Reference
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base text-center">Action</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -220,7 +245,12 @@ const UserManagement = () => {
                                 <TableCell>{invoice.paymentMethod}</TableCell>
                                 <TableCell>{invoice.paymentMethod}</TableCell>
                                 <TableCell className="">
-                                    <FaEllipsis className="text-right w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis>
+                                  {/* <UserDetails></UserDetails> */}
+                                  <div className="flex gap-1 items-center justify-center">
+                                    <UserDetails></UserDetails>
+                                    <EditUser></EditUser>
+                                    <Trash2 onClick={() => handleDelete(invoice?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2>
+                                    </div>
                                 </TableCell>
                               </TableRow>
                             ))}

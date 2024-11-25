@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { CircleDollarSign, TrendingUp, TriangleAlert } from "lucide-react";
+import { CircleDollarSign, Filter, TrendingUp, TriangleAlert } from "lucide-react";
 import { FaEllipsis, FaUser, FaUsers } from "react-icons/fa6";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -226,7 +226,7 @@ const ResellerManagement = () => {
                     </div>
                     <div>
                         <Select>
-                          <SelectTrigger className="w-[180px] text-base">
+                          <SelectTrigger className="w-[200px] text-base">
                             <SelectValue placeholder="Total user managed" />
                           </SelectTrigger>
                           <SelectContent>
@@ -253,9 +253,24 @@ const ResellerManagement = () => {
                           <TableCaption>A list of your user management.</TableCaption>
                           <TableHeader className="bg-[#F0F4FA]">
                             <TableRow className="border-b border-[#DBDADE]">
-                              <TableHead className="text-[#000000] font-medium text-base">User Name</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Reseller ID</TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base">Total User</TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                User Name
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Reseller ID
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
+                                Total User
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
                               <TableHead className="text-[#000000] font-medium text-base">Credit Balances</TableHead>
                               <TableHead className="text-[#000000] font-medium text-base">Action</TableHead>
                             </TableRow>

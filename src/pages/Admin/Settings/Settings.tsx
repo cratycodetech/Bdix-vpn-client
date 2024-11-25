@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Cog, FileCog, Files, KeySquare, PencilOff, Receipt, UserRoundCog } from "lucide-react";
+import { Bell, Clock, Cog, FileCog, Files, KeySquare, PencilOff, Receipt, UserRoundCog } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -49,24 +49,6 @@ const Settings = () => {
                             <p className="text-[#3B3B3B] text-sm">Account settings offer personalization options for a tailored experience.</p>
                         </div>
                     </Card>
-                    <Card onClick={() => setActiveSidebar(4)} className="sidebar-4 p-4 flex items-center gap-3 my-4 cursor-pointer">
-                        <div className={`border text-[#595959] rounded-lg p-3 ${activeSidebar == 3 ? "bg-[#BE62FA] text-white":"bg-[#EBCEFD]"}`}>
-                            <Bell />
-                        </div>
-                        <div>
-                            <h1 className={` text-base font-semibold ${activeSidebar == 3 ? "text-[#BE62FA]" : "text-[#2B2D42]"}`}>Privacy Settings</h1>
-                            <p className="text-[#3B3B3B] text-sm">Account settings offer personalization options for a tailored experience.</p>
-                        </div>
-                    </Card>
-                    <Card onClick={() => setActiveSidebar(5)} className="sidebar-5 p-4 flex items-center gap-3 cursor-pointer">
-                        <div className={`border text-[#595959] rounded-lg p-3 ${activeSidebar == 3 ? "bg-[#BE62FA] text-white":"bg-[#EBCEFD]"}`}>
-                            <FileCog />
-                        </div>
-                        <div>
-                            <h1 className={` text-base font-semibold ${activeSidebar == 3 ? "text-[#BE62FA]" : "text-[#2B2D42]"}`}>Notification Preferences</h1>
-                            <p className="text-[#3B3B3B] text-sm">Account settings offer personalization options for a tailored experience.</p>
-                        </div>
-                    </Card>
                 </div>
                 <div className="w-full lg:w-2/3">
                     {activeSidebar === 1 && (
@@ -96,76 +78,105 @@ const Settings = () => {
                         <div className="flex justify-end">
                             <Button className="mt-5 bg-[#4406CB] text-white">Save Settings</Button>
                         </div>
-
-                    
                     </Card>
                     )}
 
                     {activeSidebar === 2 && (
                     <Card className="content-2 px-5 py-8">
-                        <h1 className="text-[#000000] text-xl font-semibold flex items-center gap-1">Ads Display Control <span className="border bg-[#3B3B3B] text-xs text-[#595959] py-[1px] px-[8px] rounded-full"> i</span></h1>
+                        <h1 className="text-[#000000] text-2xl font-medium">Two-Factor Authentication</h1>
                         <div className="mt-3">
-                            <h1 className="text-[#595959] font-semibold text-base">Enable Ads for Free User</h1>
-                            <p className="text-[#737373] text-sm">Enable or disable ads displayed to free users on the platform.</p>
+                            <p className="text-[#3B3B3B] text-base flex items-center gap-2 justify-start">Enable 2FA. <span className="bg-[#3B3B3B] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></p>
                             <div className="flex items-center space-x-2 mt-3 text-[#BE62FA]">
                               <Switch id="airplane-mode" />
                             </div>
                         </div>
-                        <div className="mt-5">
-                            <h1 className="text-[#595959] font-semibold text-base">Enable Ads for Premium User</h1>
-                            <p className="text-[#737373] text-sm">Enable or disable ads for premium users on the platform.</p>
-                            <div className="flex items-center space-x-2 mt-3 text-[#BE62FA]">
-                              <Switch className="text-[#BE62FA]" id="airplane-mode" />
-                            </div>
-                        </div> 
+                        <div className="mt-5 flex items-center justify-end">
+                            <Button className="bg-[#4406CB] text-white">Save Settings</Button>
+                        </div>
                     </Card>
                     )}
 
                     {activeSidebar === 3 && (
                     <Card className="content-3 px-5 py-8">
-                        <h1 className="text-[#000000] text-xl font-semibold flex items-center gap-1">Ad Frequency Control <span className="border bg-[#3B3B3B] text-xs text-[#595959] py-[1px] px-[8px] rounded-full"> i</span></h1>
-                        <div className="mt-3">
-                            <h1 className="mb-1 text-[#595959] font-semibold text-base">Control how often ads are shown to free users.</h1>
-                            <Select>
-                              <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="e.g., every 5 minute" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Fruits</SelectLabel>
-                                  <SelectItem value="5 minute">5 minute</SelectItem>
-                                  <SelectItem value="10 minute">10 minute</SelectItem>
-                                  <SelectItem value="15 minute">15 minute</SelectItem>
-                                  <SelectItem value="20 minute">20 minute</SelectItem>
-                                  <SelectItem value="25 minute">25 minute</SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
+                        <h1 className="mb-5 text-[#000000] text-xl font-semibold flex items-center gap-1">System-Wide Configurations</h1>
+                        <div className="flex items-center justify-between gap-10 mt-3">
+                        <div className="w-full">
+                          <label className="text-[#3B3B3B] text-base font-semibold mb-2 block">
+                            System Timezone
+                          </label>
+                          <Select>
+                            <SelectTrigger className="w-full text-[#7E7E7E] text-sm">
+                              <SelectValue placeholder="e.g., GMT+0" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="UTC+0">UTC (Coordinated Universal Time)</SelectItem>
+                              <SelectItem value="GMT+0">GMT (Greenwich Mean Time)</SelectItem>
+                              <SelectItem value="UTC-8">PST (Pacific Standard Time)</SelectItem>
+                              <SelectItem value="UTC-5">EST (Eastern Standard Time)</SelectItem>
+                              <SelectItem value="UTC-6">CST (Central Standard Time)</SelectItem>
+                              <SelectItem value="UTC-7">MST (Mountain Standard Time)</SelectItem>
+                              <SelectItem value="UTC+5:30">IST (Indian Standard Time)</SelectItem>
+                              <SelectItem value="UTC+1">BST (British Summer Time)</SelectItem>
+                              <SelectItem value="UTC+10">AEST (Australian Eastern Standard Time)</SelectItem>
+                              <SelectItem value="UTC+9">JST (Japan Standard Time)</SelectItem>
+                              <SelectItem value="UTC+9">KST (Korea Standard Time)</SelectItem>
+                              <SelectItem value="UTC+12">NZST (New Zealand Standard Time)</SelectItem>
+                              <SelectItem value="UTC+8">HKT (Hong Kong Time)</SelectItem>
+                              <SelectItem value="UTC+9:30">ACST (Australian Central Standard Time)</SelectItem>
+                              <SelectItem value="UTC+5:45">NPT (Nepal Time)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="w-full">
+                          <label className="text-[#3B3B3B] text-base font-semibold mb-2 block">
+                            Default Language
+                          </label>
+                          <Select>
+                            <SelectTrigger className="w-full text-[#7E7E7E] text-sm">
+                              <SelectValue placeholder="e.g., English" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="en">English</SelectItem>
+                              <SelectItem value="es">Spanish</SelectItem>
+                              <SelectItem value="fr">French</SelectItem>
+                              <SelectItem value="de">German</SelectItem>
+                              <SelectItem value="zh">Chinese</SelectItem>
+                              <SelectItem value="ja">Japanese</SelectItem>
+                              <SelectItem value="ko">Korean</SelectItem>
+                              <SelectItem value="hi">Hindi</SelectItem>
+                              <SelectItem value="ar">Arabic</SelectItem>
+                              <SelectItem value="ru">Russian</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                         </div>
 
-                        <div className="mt-5">
-                            <h1 className=" text-[#595959] font-semibold text-base">Ad Revenue Reporting</h1>
-                            <p className="mb-3 text-[#737373] text-sm">View your current ad revenue for the selected platforms (AdMob/Facebook Ads).</p>
-                            <Select>
-                              <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="e.g., AdMob" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Fruits</SelectLabel>
-                                  <SelectItem value="5 minute">5 minute</SelectItem>
-                                  <SelectItem value="10 minute">10 minute</SelectItem>
-                                  <SelectItem value="15 minute">15 minute</SelectItem>
-                                  <SelectItem value="20 minute">20 minute</SelectItem>
-                                  <SelectItem value="25 minute">25 minute</SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                            <div className="mt-5 flex items-center gap-2">
-                            <Files className="text-[#A5A5A5]"></Files>
-                            <a className="text-[#5D5D5D] text-xs" href="https://dummy.restapiexample.com/api/v1/employees">https://dummy.restapiexample.com/api/v1/employees</a>
+                        <div className="mt-7 flex items-center justify-between gap-10">
+                            <div className="w-full">
+                                <p className="text-[#3B3B3B] text-base font-semibold flex items-center gap-2 justify-start">Enable System Alerts <span className="bg-[#BFBFBF] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></p>
+                                <div className="flex items-center space-x-2 mt-3 text-[#BE62FA]">
+                                  <Switch id="airplane-mode" />
+                                </div>
+                            </div>
+                            <div className="w-full">
+                                <p className="text-[#3B3B3B] text-base font-semibold flex items-center gap-2 justify-start">Enable User Activity Notifications <span className="bg-[#BFBFBF] text-xs text-white py-[1px] px-[8px] rounded-full"> i</span></p>
+                                <div className="flex items-center space-x-2 mt-3 text-[#BE62FA]">
+                                  <Switch id="airplane-mode" />
+                                </div>
                             </div>
                         </div>
+
+                        <div className="flex items-center justify-between gap-10 mt-7">
+                            <div className="w-full lg:w-[48%] md:w-[50%]">
+                                <Label className="text-[#595959] text-base font-semibold ">API Key</Label>
+                                <Input className="mt-1 py-6" type="text" placeholder="e.g., 65jkmn584" />
+                            </div>
+                        </div>
+                        <div className="flex justify-end">
+                            <Button className="mt-5 bg-[#4406CB] text-white">Save Settings</Button>
+                        </div>
+
+                        
                     </Card>
                     )}
                 </div>
