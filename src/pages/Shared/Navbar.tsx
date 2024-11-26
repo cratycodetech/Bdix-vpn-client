@@ -3,12 +3,15 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { NavLink } from "react-router-dom";
 import { useAppDispatch } from "../redux/hook";
 import { Button } from "@/components/ui/button";
+import useAdmin from "@/components/hooks/useAdmin";
+import useReseller from "@/components/hooks/useReseller";
 
 
 
 
 const Navbar = () => {
-  const dispatch = useAppDispatch()
+  const {isAdmin} = useAdmin()
+  const {isReseller} = useReseller()
 
   //handle logout
   const handleLogout = () =>{
@@ -40,9 +43,11 @@ const Navbar = () => {
                   <li>
                     <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/aboutUs">About us</NavLink>
                   </li>
-                  <li>
-                    <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
-                  </li>
+                  {(isAdmin || isReseller) && (
+                    <li>
+                      <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
+                    </li>
+                  )}
                   <li>
                     <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/servers">Servers</NavLink>
                   </li>
@@ -59,7 +64,11 @@ const Navbar = () => {
           <ul className="flex gap-5 font-semibold text-lg">
             <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/">Home</NavLink>
             <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/aboutUs">About Us</NavLink>
-            <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
+            {(isAdmin || isReseller) && (
+              <li>
+                <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
+              </li>
+            )}
             <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/servers">Servers</NavLink>
             <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/plans">Plans</NavLink>
           </ul>

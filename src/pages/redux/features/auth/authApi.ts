@@ -18,18 +18,18 @@ const authApi = baseApi.injectEndpoints({
             })
         }),
         sendOTP: builder.mutation({
-            query: (userInfo) =>({
-                url: "/auth/send-otp",
-                method: "POST",
-                body: userInfo
-            })
+            query: (email) => ({
+              url: "/auth/send-otp",
+              method: "POST",
+              body: { email }, // Send only the email as required by your backend
+            }),
         }),
-        verifyOTP: builder.mutation({
-            query: (userInfo) =>({
-                url: "/auth/verify-otp",
-                method: "POST",
-                body: userInfo
-            })
+          verifyOTP: builder.mutation({
+            query: (otpInfo) => ({
+              url: "/auth/verify-otp",
+              method: "POST",
+              body: otpInfo, // Accept `{ email, otp }` from the frontend
+            }),
         }),
         resetPass: builder.mutation({
             query: (userInfo) =>({
@@ -45,6 +45,14 @@ const authApi = baseApi.injectEndpoints({
                 body: userInfo
             })
         }),
+        checkAdmin: builder.query<boolean, string | undefined>({
+            query: (email) => `/user/admin/${email}`, // API endpoint for admin check
+            providesTags: ["Admin"], 
+        }),
+        checkReseller: builder.query<boolean, string | undefined>({
+            query: (email) => `/user/reseller/${email}`, // API endpoint for admin check
+            providesTags: ["reseller"], 
+        }),
     })
 })
 
@@ -54,5 +62,7 @@ export const {
     useResetPassMutation, 
     useLogoutMutation,
     useSendOTPMutation,
-    useVerifyOTPMutation
+    useVerifyOTPMutation,
+    useCheckAdminQuery,
+    useCheckResellerQuery
 } = authApi

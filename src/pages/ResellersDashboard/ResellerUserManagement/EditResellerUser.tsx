@@ -33,7 +33,7 @@ type TFormData = {
   resellerAssignment: string,
 }
 
-const EditUser = () => {
+const EditResellerUser = () => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<TFormData>();
   const queryClient = useQueryClient();
 
@@ -66,7 +66,7 @@ const EditUser = () => {
                 <div className="space-y-5">
                     <div>
                         <h1 className="text-[#242731] font-semibold text-xl">Personal data</h1>
-                        <p className="text-[#575F6E] text-sm">Add personal information to create new user</p>
+                        <p className="text-[#575F6E] text-sm">Update your personal details to tailor your user profile.</p>
                     </div>
                   <div>
                     <Label htmlFor="fullName" className="text-[#242426] text-base">
@@ -111,33 +111,12 @@ const EditUser = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="w-full">
-                      <Label htmlFor="resellerAssignment" className="text-[#242426] text-base">
-                        Reseller Assignment
-                      </Label>
-                      <Select onValueChange={(value) => setValue("resellerAssignment", value)}>
-                        <SelectTrigger className="border-0 border-b text-base border-[#BFBFBF] text-[#BFBFBF] focus-visible:ring-0 focus:outline-none">
-                          <SelectValue placeholder="select from menu" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Reseller Assignment</SelectLabel>
-                            {["N/A", "N/A-2", "N/A-3",].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-            
                 </div>
-                <AlertDialogFooter className="mt-4">
+                <AlertDialogFooter className="mt-5">
                   <AlertDialogCancel className="bg-[#C5B2EF]"> <Ban /> Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction>
-                    <Button type="submit"><Check /> Confirm</Button>
+                    <Button type="submit"><Check /> Save</Button>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </form>
@@ -147,4 +126,4 @@ const EditUser = () => {
   );
 };
 
-export default EditUser;
+export default EditResellerUser;

@@ -2,7 +2,6 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import MainLayout from "@/components/layout/MainLayout";
 import AdsCampaign from "@/pages/Admin/AdsCampaign/AdsCampaign";
-import CreditManagement from "@/pages/Admin/CreditManagement/creditManagement";
 import Dashboard from "@/pages/Admin/dashboard/Dashboard";
 import ReportsAndAnalysis from "@/pages/Admin/ReportsAndAnalysis/ReportsAndAnalysis";
 import ResellerManagement from "@/pages/Admin/ResellerManagement/ResellerManagement";
@@ -16,6 +15,11 @@ import Home from "@/pages/Home/Home/Home";
 import {
   createBrowserRouter,
 } from "react-router-dom";
+import AdminRoute from "./AdminRoute";
+import ResellerRoute from "./ResellerRoute";
+import PrivateRoute from "./PrivateRoute";
+import ResellerUserManagement from "@/pages/ResellersDashboard/ResellerUserManagement/ResellerUserManagement";
+import CreditManagement from "@/pages/Admin/CreditManagement/CreditManagement";
 
 const router = createBrowserRouter([
   {
@@ -47,11 +51,11 @@ const router = createBrowserRouter([
     children: [
         {
             index: true,
-            element: <Dashboard/>,
+            element: <PrivateRoute><Dashboard/></PrivateRoute>,
         },
         {
           path: "server-monitoring",
-          element: <ServerMonitoring/>
+          element: <AdminRoute><ServerMonitoring/></AdminRoute>
         }, 
         {
           path: "credit-management",
@@ -59,24 +63,29 @@ const router = createBrowserRouter([
         },
         {
           path: "ads-campaign",
-          element: <AdsCampaign/>
+          element: <AdminRoute><AdsCampaign/></AdminRoute>
         },
         {
           path: "user-management",
-          element: <UserManagement/>
+          element: <AdminRoute><UserManagement/></AdminRoute>
         },
         {
           path: "reseller-management",
-          element: <ResellerManagement/>
+          element: <AdminRoute><ResellerManagement/></AdminRoute>
         },
         {
           path: "reports-analysis",
-          element: <ReportsAndAnalysis/>
+          element: <AdminRoute><ReportsAndAnalysis/></AdminRoute>
         },
         {
           path: "settings",
-          element: <Settings/>
+          element: <AdminRoute><Settings/></AdminRoute>
         },
+        {
+          path: "reseller-user-management",
+          element: <ResellerRoute><ResellerUserManagement/></ResellerRoute>
+        },
+        
     ]
   },
 ]);
