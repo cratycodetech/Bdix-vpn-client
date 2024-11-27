@@ -20,6 +20,7 @@ import ResellerRoute from "./ResellerRoute";
 import PrivateRoute from "./PrivateRoute";
 import ResellerUserManagement from "@/pages/ResellersDashboard/ResellerUserManagement/ResellerUserManagement";
 import CreditManagement from "@/pages/Admin/CreditManagement/CreditManagement";
+import VerifyOtp from "@/pages/authentication/VerifyOTP";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
         {
           path: "forgotPassword",
           element: <ForgotPassword/>
+        },
+        {
+          path: "verify-otp",
+          element: <VerifyOtp/>
         },
         
     ]

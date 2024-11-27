@@ -1,10 +1,12 @@
 import { Menu } from "lucide-react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger,} from "@/components/ui/navigation-menu";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../redux/hook";
 import { Button } from "@/components/ui/button";
 import useAdmin from "@/components/hooks/useAdmin";
 import useReseller from "@/components/hooks/useReseller";
+import { toast } from "sonner";
+import { logout } from "../redux/features/auth/authSlice";
 
 
 
@@ -12,11 +14,26 @@ import useReseller from "@/components/hooks/useReseller";
 const Navbar = () => {
   const {isAdmin} = useAdmin()
   const {isReseller} = useReseller()
+  const isOtpVerified = localStorage.getItem("isOtpVerified") === "true";  // Read from localStorage
+  console.log("isOtpVerified", isOtpVerified);
+
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch()
+
+
 
   //handle logout
   const handleLogout = () =>{
-    // dispatch(logout())
+      try {
+        dispatch(logout())
+        toast.success("Logout successful!");
+        navigate("/login")
+      } catch (error) {
+        console.error("Logout failed", error);
+      }
   }
+
 
   return (
     <header className="bg-slate-100 text-[#999999]  shadow mx-auto py-5 fixed left-0 right-0 top-0 z-50">
@@ -43,7 +60,7 @@ const Navbar = () => {
                   <li>
                     <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/aboutUs">About us</NavLink>
                   </li>
-                  {(isAdmin || isReseller) && (
+                  {(isAdmin || isReseller && isOtpVerified) && (
                     <li>
                       <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
                     </li>
@@ -64,7 +81,7 @@ const Navbar = () => {
           <ul className="flex gap-5 font-semibold text-lg">
             <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/">Home</NavLink>
             <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/aboutUs">About Us</NavLink>
-            {(isAdmin || isReseller) && (
+            {( isAdmin || isReseller && isOtpVerified) && (
               <li>
                 <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
               </li>
@@ -78,6 +95,8 @@ const Navbar = () => {
           <NavLink to="/register">
             <Button className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6" onClick={handleLogout}>Register</Button>
           </NavLink>
+          <Button className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6" onClick={handleLogout}>Logout</Button>
+
 
         </div>
       </nav>

@@ -41,7 +41,7 @@ const authApi = baseApi.injectEndpoints({
         logout: builder.mutation({
             query: (userInfo) =>({
                 url: "/auth/logout",
-                method: "POST",
+                method: "DELETE",
                 body: userInfo
             })
         }),
