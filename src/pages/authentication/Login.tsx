@@ -13,7 +13,6 @@ import { toast } from "sonner";
 import {
   useLoginMutation,
   useSendOTPMutation,
-  useVerifyOTPMutation,
 } from "../redux/features/auth/authApi";
 import { setUser, TUserToken } from "../redux/features/auth/authSlice";
 import { useAppDispatch } from "../redux/hook";
@@ -28,7 +27,6 @@ type TFormData = {
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<TFormData>();
   const [showPassword, setShowPassword] = useState(false);
-  // const [isOTPRequested, setIsOTPRequested] = useState(false);
   const [login] = useLoginMutation();
   const [sendOTP] = useSendOTPMutation();
   const dispatch = useAppDispatch();

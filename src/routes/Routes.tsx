@@ -21,6 +21,13 @@ import PrivateRoute from "./PrivateRoute";
 import ResellerUserManagement from "@/pages/ResellersDashboard/ResellerUserManagement/ResellerUserManagement";
 import CreditManagement from "@/pages/Admin/CreditManagement/CreditManagement";
 import VerifyOtp from "@/pages/authentication/VerifyOTP";
+import DashboardSwitch from "@/components/layout/DashboardSwitch";
+import ResellerServerMonitoring from "@/pages/ResellersDashboard/ResellerServerMonitoring/ResellerServerMonitoring";
+import ResellerServerDetails from "@/pages/ResellersDashboard/ResellerServerMonitoring/ResellerServerDetails";
+import ResellerAdsCampaign from "@/pages/ResellersDashboard/ResellerAdsCampaign/ResellerAdsCampaign";
+import ResellerCreditManagement from "@/pages/ResellersDashboard/ResellerCreditManagement/ResellerCreditManagement";
+import ResellerReportsAndAnalysis from "@/pages/ResellersDashboard/ResellerReportsAndAnalysis/ResellerReportsAndAnalysis";
+import ResellerSettings from "@/pages/ResellersDashboard/ResellerSettings/ResellerSettings";
 
 const router = createBrowserRouter([
   {
@@ -56,7 +63,7 @@ const router = createBrowserRouter([
     children: [
         {
             index: true,
-            element: <PrivateRoute><Dashboard/></PrivateRoute>,
+            element: <PrivateRoute><DashboardSwitch/></PrivateRoute>,
         },
         {
           path: "server-monitoring",
@@ -89,6 +96,30 @@ const router = createBrowserRouter([
         {
           path: "reseller-user-management",
           element: <ResellerRoute><ResellerUserManagement/></ResellerRoute>
+        },
+        {
+          path: "reseller-server-monitoring",
+          element: <ResellerRoute><ResellerServerMonitoring/></ResellerRoute>
+        },
+        {
+          path: "reseller-server-monitoring/:server-details",
+          element: <ResellerRoute><ResellerServerDetails/></ResellerRoute>
+        },
+        {
+          path: "reseller-ads-campaign",
+          element: <ResellerRoute><ResellerAdsCampaign/></ResellerRoute>
+        },
+        {
+          path: "reseller-credit-management",
+          element: <ResellerRoute><ResellerCreditManagement/></ResellerRoute>
+        },
+        {
+          path: "reseller-reports-analysis",
+          element: <ResellerRoute><ResellerReportsAndAnalysis/></ResellerRoute>
+        },
+        {
+          path: "reseller-settings",
+          element: <ResellerRoute><ResellerSettings/></ResellerRoute>
         },
         
     ]

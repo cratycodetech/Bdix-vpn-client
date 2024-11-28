@@ -182,6 +182,12 @@ const ResellerUserManagement = () => {
                               </TableHead>
                               <TableHead className="text-[#000000] font-medium text-base">
                                 <div className="flex items-center justify-between">
+                                  Subscription Type
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
                                   Credits
                                     <Filter className="w-3 h-3 ml-2 cursor-pointer" />
                                 </div>
@@ -203,12 +209,13 @@ const ResellerUserManagement = () => {
                                 <TableCell>{invoice.paymentMethod}</TableCell>
                                 <TableCell>{invoice.paymentMethod}</TableCell>
                                 <TableCell>{invoice.paymentMethod}</TableCell>
+                                <TableCell>{invoice.paymentMethod}</TableCell>
                                 <TableCell className="">
                                   {/* <UserDetails></UserDetails> */}
                                   <div className="flex gap-1 items-center justify-center">
                                     <ResellerUserDetails></ResellerUserDetails>
                                     <EditResellerUser></EditResellerUser>
-                                    <Trash2 onClick={() => handleDelete(invoice?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2>
+                                    <Trash2 onClick={() => handleDelete(invoice?.invoice)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2>
                                     </div>
                                 </TableCell>
                               </TableRow>

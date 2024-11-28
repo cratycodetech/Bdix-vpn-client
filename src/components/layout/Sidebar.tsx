@@ -172,100 +172,7 @@ const SideBar = () => {
                   <span className="truncate text-sm font-medium">User Management</span>
                 </NavLink>
                 <NavLink
-                  to="/dashboard/reseller-management"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <FaBagShopping className="shrink-0 w-[22px] h-[22px]"></FaBagShopping>
-                  <span className="truncate text-sm font-medium">Reseller Management</span>
-                </NavLink>
-                
-
-              </>
-            ) : (
-              <>
-                <h1>this is for user, if user got access</h1>
-              </>
-            )
-          }
-                {/* <NavLink
-                  to="/dashboard"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <IoSave className="shrink-0 w-[25px] h-[25px]"></IoSave>
-                  <span className="truncate text-sm font-medium">Dashboard</span>
-                </NavLink> 
-                <NavLink
-                  to="/dashboard/user-management"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <FaUser className="shrink-0 w-[22px] h-[22px]"></FaUser>
-                  <span className="truncate text-sm font-medium">User Management</span>
-                </NavLink>
-                <NavLink
-                  to="/dashboard/reseller-management"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <FaBagShopping className="shrink-0 w-[22px] h-[22px]"></FaBagShopping>
-                  <span className="truncate text-sm font-medium">Reseller Management</span>
-                </NavLink>
-                <NavLink
-                  to="/dashboard/credit-management"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <FolderCog className="shrink-0 w-[2opx] h-[20px]"></FolderCog>
-                  <span className="truncate text-sm font-medium">Credit Management</span>
-                </NavLink> 
-                <NavLink
-                  to="/dashboard/ads-campaign"
-                  className={({ isActive }) =>
-                    cn(
-                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
-                      {
-                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
-                      }
-                    )
-                  }
-                >
-                  <FaBullhorn className="shrink-0 w-[2opx] h-[20px]"></FaBullhorn>
-                  <span className="truncate text-sm font-medium">Ads Campaign</span>
-                </NavLink> 
-                <NavLink
-                  to="/dashboard/server-monitoring"
+                  to="/dashboard/reseller-server-monitoring"
                   className={({ isActive }) =>
                     cn(
                       "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
@@ -279,7 +186,7 @@ const SideBar = () => {
                   <span className="truncate text-sm font-medium">Server Monitoring</span>
                 </NavLink> 
                 <NavLink
-                  to="/dashboard/reports-analysis"
+                  to="/dashboard/reseller-ads-campaign"
                   className={({ isActive }) =>
                     cn(
                       "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
@@ -289,12 +196,39 @@ const SideBar = () => {
                     )
                   }
                 >
-                  
+                  <FaBullhorn className="shrink-0 w-[2opx] h-[20px]"></FaBullhorn>
+                  <span className="truncate text-sm font-medium">Ads Campaign</span>
+                </NavLink>
+                <NavLink
+                  to="/dashboard/reseller-credit-management"
+                  className={({ isActive }) =>
+                    cn(
+                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
+                      {
+                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
+                      }
+                    )
+                  }
+                >
+                  <FolderCog className="shrink-0 w-[2opx] h-[20px]"></FolderCog>
+                  <span className="truncate text-sm font-medium">Credit Management</span>
+                </NavLink> 
+                <NavLink
+                  to="/dashboard/reseller-reports-analysis"
+                  className={({ isActive }) =>
+                    cn(
+                      "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
+                      {
+                        "text-[#FFFFFF] bg-[#4406CB]": isActive,
+                      }
+                    )
+                  }
+                >
                   <ChartNoAxesCombined className="shrink-0 w-[2opx] h-[20px]"></ChartNoAxesCombined>
                   <span className="truncate text-sm font-medium">Reports & Analysis</span>
                 </NavLink>
                 <NavLink
-                  to="/dashboard/settings"
+                  to="/dashboard/reseller-settings"
                   className={({ isActive }) =>
                     cn(
                       "p-2 pl-3 lg:h-[46px] rounded-lg transition-all flex gap-4 items-center justify-start",
@@ -307,8 +241,15 @@ const SideBar = () => {
                   
                   <FaCog className="shrink-0 w-[2opx] h-[20px]"></FaCog>
                   <span className="truncate text-sm font-medium">Settings</span>
-                </NavLink> */}
-    
+                </NavLink>
+               
+                
+
+              </>
+            ) : (
+              null
+            )
+          }
           </nav>
         </aside>
     );

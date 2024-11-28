@@ -29,22 +29,19 @@ const VerifyOtp = () => {
 
     try {
         const response = await verifyOTP({ email, otp: data.otp }).unwrap();
-
         // Set OTP verification status
-        setIsOtpVerified(true); // Use context or Redux here if global state is required
+        setIsOtpVerified(true);
     
-        // Store the status in localStorage/sessionStorage if needed
+        // set the isOtpVerified value
         localStorage.setItem("isOtpVerified", "true");
-    
         toast.success(response.message, { id: toastId });
-    
-        // Redirect to the homepage
         navigate("/");
     } catch (error: any) {
       console.error("Error verifying OTP:", error);
       toast.error(error?.data?.message || "Invalid OTP.", { id: toastId });
     }
   };
+  console.log(isOtpVerified);
 
   return (
     <div className="flex items-center justify-center h-screen">

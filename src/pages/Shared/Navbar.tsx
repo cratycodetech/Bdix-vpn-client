@@ -14,12 +14,11 @@ import { logout } from "../redux/features/auth/authSlice";
 const Navbar = () => {
   const {isAdmin} = useAdmin()
   const {isReseller} = useReseller()
-  const isOtpVerified = localStorage.getItem("isOtpVerified") === "true";  // Read from localStorage
-  console.log("isOtpVerified", isOtpVerified);
-
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
+
+  const isOtpVerified = localStorage.getItem("isOtpVerified") === "true";  // get data from localStorage
+  console.log("isOtpVerified", isOtpVerified);
 
 
 
@@ -28,6 +27,8 @@ const Navbar = () => {
       try {
         dispatch(logout())
         toast.success("Logout successful!");
+        // set the isOtpVerified value in localStorage
+        localStorage.setItem("isOtpVerified", "false");
         navigate("/login")
       } catch (error) {
         console.error("Logout failed", error);
