@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowDownToLine, EllipsisVertical, Filter, Newspaper, PencilLine, Share, Trash2, TrendingUp } from "lucide-react";
+import { ArrowDownToLine, EllipsisVertical, Filter, Newspaper, Share, Trash2, TrendingUp, UserRoundX } from "lucide-react";
 import { usePDF } from "react-to-pdf";
 import {
     Table,
@@ -15,84 +16,86 @@ import {
   } from "@/components/ui/table"
 import UserDetails from "./UserDetails";
 import EditUser from "./EditUser";
-
-const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ]
-
+import { useGetAllPremiumUserQuery, useUpdateSubscriptionStatusMutation } from "@/pages/redux/features/admin/PremiumUser/PremiumUserApi";
+import { useGetAllUsersQuery } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const UserManagement = () => {
     const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
-    // const [deleteServer] = useDeleteServerMutation()
+    const {data: getAllPremiumUser} = useGetAllPremiumUserQuery(undefined)
+    const {data: getAllUser} = useGetAllUsersQuery(undefined)
+    const [updateSubscriptionStatus] = useUpdateSubscriptionStatusMutation();
 
-    //handle delete
-    const handleDelete = async(id: string) => {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then( async(result) => {
-        if (result.isConfirmed) {
-          await deleteServer(id).unwrap();
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-          });
-        }
+     // Connect Premium Users with Users
+     const combinedUserData = getAllPremiumUser?.data?.map((premiumUser: any) => {
+      const userDetails = getAllUser?.data?.find(
+          (user: any) => user?._id === premiumUser?.userId
+      );
+      const resellerDetails = getAllUser?.data?.find(
+        (user: any) => user?._id === premiumUser?.resellerReference
+      );
+      return {
+          ...premiumUser,
+          ...userDetails,
+          resellerDetails
+      };
+    });
+
+  // Filter States
+  const [filters, setFilters] = useState({
+    userId: "",
+    email: "",
+    subscriptionStatus: "",
+    resellerReference: "",
+  });
+
+  // Filter Handler
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Apply Filters
+  const filteredUsers = combinedUserData?.filter((user: any) => {
+    return (
+      (!filters.userId || user.userId?.includes(filters.userId)) &&
+      (!filters.email || user.email?.includes(filters.email)) &&
+      (!filters.subscriptionStatus ||
+        user.subscriptionStatus === filters.subscriptionStatus) &&
+      (!filters.resellerReference ||
+        user.resellerReference?.includes(filters.resellerReference))
+    );
+  });
+
+    // Reset Filters
+    const handleFilterReset = () => {
+      setFilters({
+        userId: "",
+        email: "",
+        subscriptionStatus: "",
+        resellerReference: "",
       });
-    }
+    };
+
+
+    // Handle Subscription Update
+    const handleUpdateStatus = async (userId: string) => {
+      try {
+        const response = await updateSubscriptionStatus(userId).unwrap();
+
+        toast.success("Subscription status updated successfully!");
+        console.log("Subscription status updated successfully:", response.message);
+      } catch (error) {
+        toast.error("Failed to update subscription status. Please try again.");
+        console.error("Error updating subscription status:", error);
+      }
+    };
 
     return (
         <div>
             <div className="flex flex-col lg:flex-row gap-5">
                 <div className="w-full lg:w-1/2">
-                    <h1 className="text-[#000000] text-2xl font-medium mb-2">580 Premium User</h1>
+                    <h1 className="text-[#000000] text-2xl font-medium mb-2">{getAllPremiumUser?.data?.length} Premium User</h1>
                     <div className="bg-[#405F1F4D] w-[110px] text-[#395917] px-1 text-sm rounded-lg flex items-center gap-1">
                         <TrendingUp className="w-[15px]"></TrendingUp>
                         <p className="font-medium">+3 new user</p>
@@ -115,7 +118,7 @@ const UserManagement = () => {
 
             </div>
 
-            <div className="my-6">
+            {/* <div className="my-6">
                 <h1 className="text-[#2B2D42] text-lg font-medium">Search Filters</h1>
                 <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center justify-between gap-5">
                     <div>
@@ -186,6 +189,88 @@ const UserManagement = () => {
                         <Button className="bg-[#4406CB] text-[#FFFFFF] font-semibold text-lg leading-6 py-6">Apply Filter</Button>
                     </div>
                 </div>
+            </div> */}
+            <div className="my-6">
+              <h1 className="text-[#2B2D42] text-lg font-medium">Search Filters</h1>
+              <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center justify-between gap-5">
+                <div>
+                  <Select onValueChange={(value) => handleFilterChange("userId", value)}>
+                    <SelectTrigger className="w-[180px] text-base">
+                      <SelectValue placeholder="User ID" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>User ID</SelectLabel>
+                        {combinedUserData?.map((user: any) => (
+                          <SelectItem key={user.userId} value={user.userId}>
+                            {user.userId}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Select onValueChange={(value) => handleFilterChange("email", value)}>
+                    <SelectTrigger className="w-[180px] text-base">
+                      <SelectValue placeholder="User Email" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>User Email</SelectLabel>
+                        {combinedUserData?.map((user: any) => (
+                          <SelectItem key={user.email} value={user.email}>
+                            {user.email}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Select
+                    onValueChange={(value) =>
+                      handleFilterChange("subscriptionStatus", value)
+                    }
+                  >
+                    <SelectTrigger className="w-[180px] text-base">
+                      <SelectValue placeholder="Subscription Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Subscription Status</SelectLabel>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="In Active">In Active</SelectItem>
+                        <SelectItem value="Expired">Expired</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Select
+                    onValueChange={(value) =>
+                      handleFilterChange("resellerReference", value)
+                    }
+                  >
+                    <SelectTrigger className="w-[180px] text-base">
+                      <SelectValue placeholder="Reseller Reference" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Reseller Reference</SelectLabel>
+                        {combinedUserData?.map((user: any) => (
+                          <SelectItem key={user.resellerReference} value={user.resellerReference}>
+                            {user.resellerReference}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="xl:flex xl:place-content-end">
+                    <Button onClick={handleFilterReset} className="bg-[#4406CB] text-[#FFFFFF] font-semibold text-lg leading-6 py-6">Reset Filter</Button>
+                </div>
+              </div>
             </div>
 
             <div className="mb-7 flex items-center justify-end">
@@ -237,24 +322,25 @@ const UserManagement = () => {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {invoices.map((invoice) => (
-                              <TableRow key={invoice.invoice}>
-                                <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                                <TableCell>{invoice.paymentStatus}</TableCell>
-                                <TableCell>{invoice.paymentMethod}</TableCell>
-                                <TableCell>{invoice.paymentMethod}</TableCell>
-                                <TableCell>{invoice.paymentMethod}</TableCell>
-                                <TableCell className="">
-                                  {/* <UserDetails></UserDetails> */}
-                                  <div className="flex gap-1 items-center justify-center">
-                                    <UserDetails></UserDetails>
-                                    <EditUser></EditUser>
-                                    <Trash2 onClick={() => handleDelete(invoice?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2>
-                                    </div>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
+                                {filteredUsers?.map((list: any) => (
+                                    <TableRow key={list._id}>
+                                        <TableCell className="font-medium">{list.userId}</TableCell>
+                                        <TableCell>{list?.email || "N/A"}</TableCell>
+                                        <TableCell>{list?.subscriptionStatus || "N/A"}</TableCell>
+                                        <TableCell>{list?.credits}</TableCell>
+                                        <TableCell>{list?.resellerReference || "N/A"}</TableCell>
+                                        <TableCell className="flex gap-1 items-center justify-center">
+                                            <UserDetails list={list} />
+                                            <EditUser list={list}/>
+                                            <UserRoundX
+                                                // onClick={() => handleDelete(list._id)}
+                                                onClick={() => handleUpdateStatus(list._id)}
+                                                className="w-[25px] h-[25px] text-[#1E1E1E]"
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
                         </Table>
 
                     </div>

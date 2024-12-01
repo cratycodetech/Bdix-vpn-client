@@ -11,6 +11,7 @@ import {
     ResponsiveContainer,
   } from 'recharts';
   import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGetAllUsersQuery } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
 
 
   const data = [
@@ -32,6 +33,8 @@ const Dashboard = () => {
     // Generate an array of years from 2024 to 2050
     const years = Array.from({ length: 2050 - 2024 + 1 }, (_, i) => 2024 + i);
 
+    const {data: getAllUsers} = useGetAllUsersQuery(undefined)
+
     return (
         <div className="">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -50,7 +53,7 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">10,000</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getAllUsers?.data?.length}</h1>
                                 <p className="text-[#1E1E1E] text-base">Since Launch</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
