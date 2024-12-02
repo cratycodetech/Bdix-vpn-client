@@ -43,10 +43,18 @@ const AdminResellerApi = baseApi.injectEndpoints({
             }),
             providesTags: ['reseller'],
         }),
-        getResellerDetails: builder.query({
+        getAllUsersForSingleReseller: builder.query({
             query: (resellerId) =>({
-                url: `/reseller/${resellerId}`,
+                url: `/reseller/single/${resellerId}`,
                 method: "GET",
+            }),
+            providesTags: ['reseller'],
+        }),
+        getCountActiveResellers: builder.query({
+            query: (resellerInfo) =>({
+                url: "/reseller/active/count",
+                method: "GET",
+                body: resellerInfo
             }),
             providesTags: ['reseller'],
         }),
@@ -59,7 +67,8 @@ export const {
     useGetCountTotalActivePremiumUsersQuery,
     useGetTotalAvailableCreditsQuery,
     useGetTotalPremiumUsersForAllResellerQuery,
-    useGetResellerDetailsQuery
+    useGetAllUsersForSingleResellerQuery,
+    useGetCountActiveResellersQuery
 
 
  } = AdminResellerApi;

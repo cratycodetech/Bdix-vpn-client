@@ -7,9 +7,8 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
 import {Mail } from "lucide-react";
-import { FaEllipsis, FaLocationArrow, FaPen, FaPhone } from "react-icons/fa6";
+import { FaEllipsis, FaPhone } from "react-icons/fa6";
 import {
     Table,
     TableBody,
@@ -21,46 +20,13 @@ import {
   } from "@/components/ui/table"
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGetResellerDetailsQuery } from "@/pages/redux/features/admin/AdminResellerManagement/AdminResellerManagementApi";
-const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-      },
-      {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-      },
-      {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-      },
-
-  ]
+import { useGetAllUsersForSingleResellerQuery } from "@/pages/redux/features/admin/AdminResellerManagement/AdminResellerManagementApi";
 
 
 
 const ResellerDetails = ({list}: {list: any}) => {
-  // console.log(list);
-  const { resellerEmail, resellerId, resellerName, resellerPhone, totalPremiumUsers} = list
+  const { resellerEmail, resellerId, resellerName, resellerPhone} = list
+  const {data: getAllUsersForSingleReseller} = useGetAllUsersForSingleResellerQuery(resellerId)
 
   return (
       <div className="">
@@ -94,7 +60,7 @@ const ResellerDetails = ({list}: {list: any}) => {
                     <ScrollArea className="h-60 rounded-md border">
                         <div className="p-4">
                             <Table>
-                              <TableCaption>A list of your user management.</TableCaption>
+                              <TableCaption>A list of your reseller user management.</TableCaption>
                               <TableHeader className="bg-[#F0F4FA]">
                                 <TableRow className="border-b border-[#DBDADE]">
                                   <TableHead className="text-[#8B909A] font-medium text-sm">User Name</TableHead>
@@ -103,12 +69,12 @@ const ResellerDetails = ({list}: {list: any}) => {
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
-                                {invoices.map((invoice) => (
-                                  <TableRow key={invoice.invoice}>
-                                    <TableCell>Jhon Doe</TableCell>
-                                    <TableCell>Active</TableCell>
+                                {getAllUsersForSingleReseller?.premiumUsers?.map((list: any) => (
+                                  <TableRow key={list.list}>
+                                    <TableCell>{list?.userId?.name}</TableCell>
+                                    <TableCell>{list?.subscriptionStatus}</TableCell>
                                     <TableCell className="">
-                                        +100 credit
+                                        {list?.credits} credit
                                     </TableCell>
                                   </TableRow>
                                 ))}

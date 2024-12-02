@@ -11,7 +11,9 @@ import {
     ResponsiveContainer,
   } from 'recharts';
   import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useGetAllUsersQuery } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
+import { useGetAllCreditQuery } from "@/pages/redux/features/admin/creditManagement/CreditManagementApi";
+import { useGetCountActiveResellersQuery } from "@/pages/redux/features/admin/AdminResellerManagement/AdminResellerManagementApi";
+import { useGetCountAllUsersQuery } from "@/pages/redux/features/reseller/resellerDashboard/ResellerDashboardApi";
 
 
   const data = [
@@ -33,7 +35,12 @@ const Dashboard = () => {
     // Generate an array of years from 2024 to 2050
     const years = Array.from({ length: 2050 - 2024 + 1 }, (_, i) => 2024 + i);
 
-    const {data: getAllUsers} = useGetAllUsersQuery(undefined)
+    const {data: getAllCredit} = useGetAllCreditQuery(undefined)
+    const {data: getCountActiveResellers} = useGetCountActiveResellersQuery(undefined)
+    const {data: getCountAllUsers} = useGetCountAllUsersQuery(undefined)
+    
+
+    
 
     return (
         <div className="">
@@ -53,7 +60,7 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getAllUsers?.data?.length}</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getCountAllUsers?.data}</h1>
                                 <p className="text-[#1E1E1E] text-base">Since Launch</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -79,7 +86,7 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">1,500</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getCountActiveResellers?.data}</h1>
                                 <p className="text-[#1E1E1E] text-base">This month</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -105,7 +112,7 @@ const Dashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">50,000</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getAllCredit?.data?.[0]?.credit}</h1>
                                 <p className="text-[#1E1E1E] text-base">Total credit used since</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">

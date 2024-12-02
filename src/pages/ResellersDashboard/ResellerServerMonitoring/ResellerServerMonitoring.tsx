@@ -2,7 +2,7 @@
 import {
     Card,
   } from "@/components/ui/card"
-import {  Cpu, Eye, Filter, Hourglass, RefreshCcw, Share, Trash2 } from "lucide-react";
+import { Eye, Filter, RefreshCcw, Share, Trash2 } from "lucide-react";
 import { FaEllipsis } from "react-icons/fa6";
 import {
     Table,
@@ -14,7 +14,7 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-import { useDeleteServerMutation, useGetAllServerQuery, useGetCountActiveServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useDeleteServerMutation, useGetAllServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import moment from "moment";
 import { usePDF } from 'react-to-pdf';
 import Swal from 'sweetalert2'
@@ -104,10 +104,11 @@ const ResellerServerMonitoring = () => {
                                 </TableCell>
                                 <TableCell className="">
                                     <div className="flex gap-1 items-center justify-center">
-                                    <Link to="/dashboard/reseller-server-monitoring/server-details"><Eye className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></Eye></Link>
-                                    <RefreshCcw className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
-                                    <Trash2 onClick={() => handleDelete(list?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2>
+                                    <Link to={`/dashboard/reseller-server-monitoring/server-details/${list._id}`}><FaEllipsis className="w-[25px] h-[25px] text-[#1E1E1E]"></FaEllipsis></Link>
+                                    {/* <RefreshCcw className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
+                                    <Trash2 onClick={() => handleDelete(list?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2> */}
                                     </div>
+                                    
                                 </TableCell>
                               </TableRow>
                             ))}

@@ -25,7 +25,6 @@ const ResellerManagement = () => {
     const {data: GetCountTotalActivePremiumUsers} = useGetCountTotalActivePremiumUsersQuery(undefined)
     const {data: getTotalAvailableCredits} = useGetTotalAvailableCreditsQuery(undefined)
     const {data: getTotalPremiumUsersForAllReseller} = useGetTotalPremiumUsersForAllResellerQuery(undefined)
-    // console.log(getTotalPremiumUsersForAllReseller);
 
     // Filter States
   const [filters, setFilters] = useState({
@@ -81,7 +80,7 @@ const ResellerManagement = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getTotalResellers?.totalResellers}</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getTotalResellers?.data}</h1>
                                 <p className="text-[#1E1E1E] text-base">Active Reseller</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">

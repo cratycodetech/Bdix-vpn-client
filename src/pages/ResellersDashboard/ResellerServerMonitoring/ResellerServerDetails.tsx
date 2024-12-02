@@ -7,7 +7,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Filter, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePDF } from "react-to-pdf";
-import { useGetAllServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useGetAllServerQuery, useGetSingleServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -19,6 +19,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb"
+import { useParams } from "react-router-dom";
 
 //data for chart
 const data = [
@@ -34,6 +35,9 @@ const data = [
 const ResellerServerDetails = () => {
     const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
     const {data: getAllServer} = useGetAllServerQuery(undefined)
+    const { id } = useParams();
+    const {data: getSingleServer} = useGetSingleServerQuery(id)
+    console.log(getSingleServer);
 
     return (
         <div>

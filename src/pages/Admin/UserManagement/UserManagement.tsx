@@ -203,7 +203,7 @@ const UserManagement = () => {
                         <SelectLabel>User ID</SelectLabel>
                         {combinedUserData?.map((user: any) => (
                           <SelectItem key={user.userId} value={user.userId}>
-                            {user.userId}
+                            {user?.userId}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -333,7 +333,6 @@ const UserManagement = () => {
                                             <UserDetails list={list} />
                                             <EditUser list={list}/>
                                             <UserRoundX
-                                                // onClick={() => handleDelete(list._id)}
                                                 onClick={() => handleUpdateStatus(list._id)}
                                                 className="w-[25px] h-[25px] text-[#1E1E1E]"
                                             />

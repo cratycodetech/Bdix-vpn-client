@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { CircleDollarSign,TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { FaEllipsis, FaUser, FaUsers } from "react-icons/fa6";
 import {
     LineChart,
@@ -11,6 +11,7 @@ import {
     ResponsiveContainer,
   } from 'recharts';
   import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGetAllNormalUsersQuery, useGetAllPremiumUsersQuery, useGetTotalUsersQuery } from "@/pages/redux/features/reseller/resellerDashboard/ResellerDashboardApi";
 
 
   const data = [
@@ -31,6 +32,10 @@ import {
 const ResellerDashboard = () => {
     // Generate an array of years from 2024 to 2050
     const years = Array.from({ length: 2050 - 2024 + 1 }, (_, i) => 2024 + i);
+    const {data: getAllNormalUsers} = useGetAllNormalUsersQuery(undefined)
+    const {data: getTotalUsers} = useGetTotalUsersQuery(undefined)
+    const {data: getAllPremiumUsers} = useGetAllPremiumUsersQuery(undefined)
+    
 
     return (
         <div className="">
@@ -50,7 +55,7 @@ const ResellerDashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">2,500</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getTotalUsers?.count}</h1>
                                 <p className="text-[#1E1E1E] text-base">Since Launch</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -102,7 +107,7 @@ const ResellerDashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">50,000</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getAllNormalUsers?.count}</h1>
                                 <p className="text-[#1E1E1E] text-base">1 Nov-13 Nov, 2024</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -128,7 +133,7 @@ const ResellerDashboard = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">1,500</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getAllPremiumUsers?.count}</h1>
                                 <p className="text-[#1E1E1E] text-base">1 Nov-13 Nov, 2024</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">

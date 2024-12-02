@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 import { useQueryClient } from "react-query";
 import { Ban, Check, PencilLine } from "lucide-react";
+import { useGetTotalPremiumUsersForAllResellerQuery } from "@/pages/redux/features/admin/AdminResellerManagement/AdminResellerManagementApi";
 
 type TFormData = {
   fullName : string,
@@ -35,6 +36,7 @@ type TFormData = {
 
 const EditUser = ({ list }: { list: any }) => {
   const { name, email, subscriptionType, resellerDetails } = list;
+  const {data: getTotalPremiumUsersForAllReseller} = useGetTotalPremiumUsersForAllResellerQuery(undefined)
   const { register, handleSubmit, setValue, watch, formState: { errors },} = useForm<TFormData>({
       defaultValues: {
         fullName: name || "",
@@ -116,7 +118,7 @@ const EditUser = ({ list }: { list: any }) => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Subscription Type</SelectLabel>
-                      {["Monthly", "Yearly"].map((item) => (
+                      {["Monthly","Half-Yearly", "Yearly"].map((item) => (
                         <SelectItem key={item} value={item}>
                           {item}
                         </SelectItem>
@@ -140,9 +142,9 @@ const EditUser = ({ list }: { list: any }) => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Reseller Assignment</SelectLabel>
-                      {["N/A", "N/A-2", "N/A-3"].map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
+                      {getTotalPremiumUsersForAllReseller?.data?.map((item) => (
+                        <SelectItem key={item?.resellerName} value={item?.resellerName}>
+                          {item?.resellerName}
                         </SelectItem>
                       ))}
                     </SelectGroup>

@@ -50,10 +50,10 @@ const serverApi = baseApi.injectEndpoints({
             invalidatesTags: ['server'],
         }),
         updateServerStatus: builder.mutation({
-            query: (options) =>({
-                url: `/server/change-status/${options.id}`,
-                method: "PUT",
-                body: options.data,
+            query: ({ id, status }) =>({
+                url: `/server/change-status/${id}`,
+                method: "PATCH",
+                body: { status }
             }),
             invalidatesTags: ['server'],
         }),

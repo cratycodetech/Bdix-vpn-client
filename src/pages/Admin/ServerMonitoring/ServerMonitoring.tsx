@@ -16,7 +16,7 @@ import {
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
 import AddServer from "./AddServer";
-import { useDeleteServerMutation, useGetAllServerQuery, useGetCountActiveServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useDeleteServerMutation, useGetAllServerQuery, useGetCountActiveServerQuery, useUpdateServerStatusMutation } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import moment from "moment";
 import { usePDF } from 'react-to-pdf';
 import Swal from 'sweetalert2'
@@ -29,6 +29,8 @@ import {
     Tooltip,
     ResponsiveContainer,
   } from "recharts";
+import { toast } from "sonner";
+import { useState } from "react";
 
   const data = [
     { name: "Jan", upload: 75, download: 45 },
@@ -41,10 +43,14 @@ import {
 
 
 const ServerMonitoring = () => {
+    const [selectedServer, setSelectedServer] = useState<any>(null);
     const {data: getAllServer} = useGetAllServerQuery(undefined)
     const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
     const {data: getCountActiveServer} = useGetCountActiveServerQuery(undefined)
     const [deleteServer] = useDeleteServerMutation()
+    const [updateServerStatus] = useUpdateServerStatusMutation()
+    const [servers, setServers] = useState(getAllServer?.data || []);
+    
 
     //handle delete
     const handleDelete = async(id: string) => {
@@ -67,6 +73,28 @@ const ServerMonitoring = () => {
         }
       });
     }
+    //handle status change
+    const handleUpdateStatus = async (serverId: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        try {
+            await updateServerStatus({ id: serverId, status: newStatus }).unwrap();
+            // Update the local server state to reflect the status change
+            setServers(servers.map((server: any) => 
+                server.id === serverId ? { ...server, status: newStatus } : server
+            ));
+    
+            toast.success(`Server status updated to ${newStatus}!`);
+        } catch (error) {
+            toast.error('Failed to update server status.');
+            console.error("Error updating server status:", error);
+        }
+    };
+
+    //handle server details
+    const handleServerDetails = async(list: any) => {
+        setSelectedServer(list)
+    }
+
 
 
     return (
@@ -168,12 +196,12 @@ const ServerMonitoring = () => {
                             </div>
                         </div>
                         <div className="mt-7">
-                            <h1 className="text-[#2B2D42] text-4xl font-bold">215A</h1>
+                            <h1 className="text-[#2B2D42] text-3xl font-bold">{selectedServer?.serverName}</h1>
                             <div className="mt-4 flex items-center justify-start gap-8">
                                 <p className="text-[#1E1E1E] text-base">Status : </p>
                                 <div className="flex items-center justify-center gap-2">
                                     <p className="bg-[#56BA28] w-[11px] h-[11px] rounded-full"></p>
-                                    <p className="text-[#56BA28] text-[15px]">Active</p>
+                                    <p className="text-[#56BA28] text-[15px]">{selectedServer?.status}</p>
                                 </div>
                             </div>
                         </div>
@@ -270,9 +298,9 @@ const ServerMonitoring = () => {
                                 </TableCell>
                                 <TableCell className="">
                                     <div className="flex gap-1 items-center justify-center">
-                                    <RefreshCcw className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
-                                    <Trash2 onClick={() => handleDelete(list?._id)} className="w-[25px] h-[25px] text-[#1E1E1E] border-r-2 pr-1"></Trash2>
-                                    <FaEllipsis className="w-[20px] h-[25px] text-[#1E1E1E]"></FaEllipsis>
+                                        <FaEllipsis onClick={() => handleServerDetails(list)} className="w-[25px] h-[25px] text-[#1E1E1E] border-r-2 pr-1"></FaEllipsis>
+                                        <RefreshCcw onClick={() => handleUpdateStatus(list?._id, list?.status)} className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
+                                        <Trash2 onClick={() => handleDelete(list?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2>
                                     </div>
                                 </TableCell>
                               </TableRow>

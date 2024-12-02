@@ -102,7 +102,7 @@ const router = createBrowserRouter([
           element: <ResellerRoute><ResellerServerMonitoring/></ResellerRoute>
         },
         {
-          path: "reseller-server-monitoring/:server-details",
+          path: "reseller-server-monitoring/server-details/:id",
           element: <ResellerRoute><ResellerServerDetails/></ResellerRoute>
         },
         {
