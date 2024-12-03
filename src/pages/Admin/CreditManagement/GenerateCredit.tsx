@@ -14,44 +14,38 @@
   } from "@/components/ui/alert-dialog"
   import { Button } from "@/components/ui/button"
 import { IoAdd } from "react-icons/io5";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
 import { toast } from "sonner";
 import { useQueryClient } from "react-query";
 import { Ban, Check } from "lucide-react";
+import { useGenerateCreditsMutation } from "@/pages/redux/features/admin/creditManagement/CreditManagementApi";
 
 type TFormData = {
-    creditAmount : string,
-    reseller : string,
-    userId : string,
-    remarks: string,
+    credit : string,
   }
 
 const GenerateCredit = () => {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<TFormData>();
+    const { register, handleSubmit, formState: { errors } } = useForm<TFormData>();
     const queryClient = useQueryClient();
+    const [generateCredits] = useGenerateCreditsMutation()
 
 
     //Handle submit
     const onSubmit : SubmitHandler<TFormData>= (data: any) =>{
-    const toastId = toast.loading("announcement in");
+    const toastId = toast.loading("adding Credit");
     try {
       console.log("updated data", data);
-    //   addNewServer(data)
-      toast.success("Server Added Successfully!", { id: toastId, duration: 2000 });
-      queryClient.invalidateQueries("server");
+      const updatedData = {
+        ...data,
+        credit: Number(data.credit),
+      };
+      generateCredits(updatedData)
+      toast.success("Credit Added Successfully!", { id: toastId, duration: 2000 });
+      queryClient.invalidateQueries("credit");
       
     } catch (error) {
       toast.error("Something went wrong!", { id: toastId, duration: 2000 });
     }
-};
+  };
 
     return (
         <div className="">
@@ -71,62 +65,15 @@ const GenerateCredit = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className="border p-4 rounded-xl">
                   <div className="space-y-5">
                     <div>
-                      <Label htmlFor="creditAmount" className="text-[#242426] text-base">
+                      <Label htmlFor="credit" className="text-[#242426] text-base">
                         Credit Amount
                       </Label>
                       <Input
-                        {...register("creditAmount", { required: "Please write credit amount" })}
+                        {...register("credit", { required: "Please write credit amount" })}
                         className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
                         placeholder="Enter credits to generate"
                       />
-                      {errors.creditAmount && <p className="text-red-500">{errors.creditAmount.message}</p>}
-                    </div>
-                    <div className="w-full">
-                        <Label htmlFor="assignTo" className="text-[#242426] text-base">
-                          Assign To
-                        </Label>
-                        <Select onValueChange={(value) => setValue("reseller", value)}>
-                          <SelectTrigger className="border-0 border-b text-base border-[#BFBFBF] text-[#BFBFBF] focus-visible:ring-0 focus:outline-none">
-                            <SelectValue placeholder="Select Reseller / Premium User" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Memory Allocation</SelectLabel>
-                              {["Reseller1", "Reseller2", "Reseller3", "Reseller4"].map((item) => (
-                                <SelectItem key={item} value={item}>
-                                  {item}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="userId" className="text-[#242426] text-base">
-                          Reseller/Premium User ID
-                      </Label>
-                      <Input
-                        {...register("creditAmount", { required: "Please write credit amount" })}
-                        className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
-                        placeholder="Enter ID"
-                      />
-                      {errors.userId && <p className="text-red-500">{errors.userId.message}</p>}
-                    </div>
-                  
-                    <div className="mt-4">
-                      <Label htmlFor="remarks" className="text-[#242426] text-base">
-                        Remarks
-                      </Label>
-                      <Input
-                        {...register("remarks", {
-                          required: "Please write remarks if you want",
-                        })}
-                        className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
-                        placeholder="add notes...."
-                      />
-                      {errors.remarks && (
-                        <p className="text-red-500">{errors.remarks.message}</p>
-                      )}
+                      {errors.credit && <p className="text-red-500">{errors.credit.message}</p>}
                     </div>
                    
                   </div>

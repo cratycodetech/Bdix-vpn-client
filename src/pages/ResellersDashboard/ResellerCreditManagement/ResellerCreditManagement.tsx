@@ -12,7 +12,7 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-import { useDeleteServerMutation, useGetAllServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useDeleteServerMutation } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import { usePDF } from 'react-to-pdf';
 import Swal from 'sweetalert2'
 import {
@@ -25,78 +25,53 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import RequestCredits from "./RequestCredits";
+import { useGetAllUserCreditRequestQuery } from "@/pages/redux/features/reseller/resellerCreditManagement/ResellerCreditManagementApi";
+import moment from "moment";
+import { useAppSelector } from "@/pages/redux/hook";
+import { useCurrentUser } from "@/pages/redux/features/auth/authSlice";
+import { useGetSingleResellerAvailableCreditQuery } from "@/pages/redux/features/admin/AdminResellerManagement/AdminResellerManagementApi";
+import { useState } from "react";
 
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ]
+
 
 const ResellerCreditManagement = () => {
-    const {data: getAllServer} = useGetAllServerQuery(undefined)
     const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
-    const [deleteServer] = useDeleteServerMutation()
+    const {data: getAllUserCreditRequest} = useGetAllUserCreditRequestQuery(undefined)
+    const currentUser = useAppSelector(useCurrentUser)
+    const {data: getSingleResellerAvailableCredit} = useGetSingleResellerAvailableCreditQuery(currentUser?.email)
 
-    //handle delete
-    const handleDelete = async(id: string) => {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then( async(result) => {
-        if (result.isConfirmed) {
-          await deleteServer(id).unwrap();
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-          });
-        }
+    console.log(getAllUserCreditRequest);
+
+    // Filter States
+  const [filters, setFilters] = useState({
+    userId: "",
+    creditAmount: "",
+    status: "",
+  });
+
+    // Filter change Handler
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  //filter functionality
+  const filteredUsers = getAllUserCreditRequest?.data?.filter((user: any) => {
+    return (
+      (!filters.userId || user?.userId?.toString()?.includes(filters.userId)) &&
+      (!filters.creditAmount || user?.creditAmount?.toString()?.includes(filters.creditAmount)) &&
+      (!filters.status || user?.status?.includes(filters.status))
+    );
+  });
+
+    // Reset Filters
+    const handleFilterReset = () => {
+      setFilters({
+        userId: "",
+        creditAmount: "",
+        status: ""
       });
-    }
+    };
+
 
 
     return (
@@ -118,7 +93,7 @@ const ResellerCreditManagement = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">10,500</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getSingleResellerAvailableCredit?.totalCredit}</h1>
                                 <p className="text-[#1E1E1E] text-base">Created credits</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -144,7 +119,7 @@ const ResellerCreditManagement = () => {
                         </div>
                         <div className="mt-5 flex items-center justify-between gap-4">
                             <div>
-                                <h1 className="text-[#2B2D42] text-4xl font-bold">2,500</h1>
+                                <h1 className="text-[#2B2D42] text-4xl font-bold">{getSingleResellerAvailableCredit?.availableCredit}</h1>
                                 <p className="text-[#1E1E1E] text-base">Remaining Credits</p>
                             </div>
                             <div className="bg-[#405F1F4D] text-[#395917] px-1 text-sm rounded-lg flex items-center justify-center gap-1">
@@ -158,77 +133,57 @@ const ResellerCreditManagement = () => {
 
             <div className="my-6">
                 <h1 className="text-[#3A354161] text-lg font-medium">Search by reseller</h1>
-                <div className="mt-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center justify-between gap-5">
+                <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 items-center justify-between gap-5">
                     <div>
-                        <Select>
-                          <SelectTrigger className="w-[180px] text-base">
-                            <SelectValue placeholder="Search by reseller" />
+                        <Select onValueChange={(value) => handleFilterChange("userId", value)}>
+                          <SelectTrigger className="w-[200px] text-base">
+                            <SelectValue placeholder="Search by User ID" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>Resellers</SelectLabel>
-                              <SelectItem value="reseller1">reseller1</SelectItem>
-                              <SelectItem value="reseller2">reseller2</SelectItem>
-                              <SelectItem value="reseller3">reseller3</SelectItem>
-                              <SelectItem value="reseller4">reseller4</SelectItem>
-                              <SelectItem value="reseller5">reseller5</SelectItem>
+                              <SelectLabel>User ID</SelectLabel>
+                              {getAllUserCreditRequest?.data?.map((user: any) => (
+                                <SelectItem key={user._id} value={user.userId}>
+                                  {user?.userId}
+                                </SelectItem>
+                              ))}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
                     </div>
                     <div>
-                        <Select>
-                          <SelectTrigger className="w-[180px] text-base">
-                            <SelectValue placeholder="Credit Issued" />
+                        <Select onValueChange={(value) => handleFilterChange("creditAmount", value)}>
+                          <SelectTrigger className="w-[200px] text-base">
+                            <SelectValue placeholder="Credit Amount" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
                               <SelectLabel>Credits</SelectLabel>
-                              <SelectItem value="reseller1">reseller1</SelectItem>
-                              <SelectItem value="reseller2">reseller2</SelectItem>
-                              <SelectItem value="reseller3">reseller3</SelectItem>
-                              <SelectItem value="reseller4">reseller4</SelectItem>
-                              <SelectItem value="reseller5">reseller5</SelectItem>
+                              {getAllUserCreditRequest?.data?.map((user: any) => (
+                                <SelectItem key={user._id} value={user.creditAmount}>
+                                  {user?.creditAmount}
+                                </SelectItem>
+                              ))}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
                     </div>
                     <div>
-                        <Select>
-                          <SelectTrigger className="w-[180px] text-base">
-                            <SelectValue placeholder="Credit Transferred" />
+                        <Select onValueChange={(value) => handleFilterChange("status", value)}>
+                          <SelectTrigger className="w-[200px] text-base">
+                            <SelectValue placeholder="Credit Status" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>Credit Transferred</SelectLabel>
-                              <SelectItem value="reseller1">reseller1</SelectItem>
-                              <SelectItem value="reseller2">reseller2</SelectItem>
-                              <SelectItem value="reseller3">reseller3</SelectItem>
-                              <SelectItem value="reseller4">reseller4</SelectItem>
-                              <SelectItem value="reseller5">reseller5</SelectItem>
+                              <SelectLabel>Status</SelectLabel>
+                                <SelectItem value="pending">pending</SelectItem>
+                                <SelectItem value="done">done</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
                     </div>
-                    <div>
-                        <Select>
-                          <SelectTrigger className="w-[180px] text-base">
-                            <SelectValue placeholder="Assigned To" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Assigned To</SelectLabel>
-                              <SelectItem value="reseller1">reseller1</SelectItem>
-                              <SelectItem value="reseller2">reseller2</SelectItem>
-                              <SelectItem value="reseller3">reseller3</SelectItem>
-                              <SelectItem value="reseller4">reseller4</SelectItem>
-                              <SelectItem value="reseller5">reseller5</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                    </div>
-                    <div className="xl:flex xl:place-content-end">
-                        <Button className="bg-[#4406CB] text-[#FFFFFF] font-semibold text-lg leading-6 py-6">Apply Filter</Button>
+                    <div className="xl:flex lg:flex lg:place-content-end xl:place-content-end">
+                        <Button onClick={handleFilterReset} className="bg-[#4406CB] text-[#FFFFFF] font-semibold text-lg leading-6 py-6">Reset Filter</Button>
                     </div>
                 </div>
             </div>
@@ -250,6 +205,12 @@ const ResellerCreditManagement = () => {
                             <TableRow className="border-b border-[#DBDADE]">
                               <TableHead className="text-[#000000] font-medium text-base">
                                 <div className="flex items-center justify-between">
+                                    User ID
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
                                     Date
                                     <Filter className="w-3 h-3 ml-2 cursor-pointer" />
                                 </div>
@@ -262,22 +223,32 @@ const ResellerCreditManagement = () => {
                               </TableHead>
                               <TableHead className="text-[#000000] font-medium text-base">
                                 <div className="flex items-center justify-between">
+                                      Status
+                                    <Filter className="w-3 h-3 ml-2 cursor-pointer" />
+                                </div>
+                              </TableHead>
+                              <TableHead className="text-[#000000] font-medium text-base">
+                                <div className="flex items-center justify-between">
                                 Request To
                                     <Filter className="w-3 h-3 ml-2 cursor-pointer" />
                                 </div>
                               </TableHead>
-                              <TableHead className="text-[#000000] font-medium text-base text-center">Request Credit</TableHead>
+                              {/* <TableHead className="text-[#000000] font-medium text-base text-center">Request Credit</TableHead> */}
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {invoices.map((invoice) => (
-                              <TableRow key={invoice.invoice}>
-                                <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                                <TableCell>{invoice.paymentMethod}</TableCell>
-                                <TableCell>{invoice.paymentMethod}</TableCell>
-                                <TableCell className="text-center flex items-center justify-center">
-                                    <FaEllipsis className="text-right w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis>
+                            {filteredUsers?.map((list: any) => (
+                              <TableRow key={list._id}>
+                                <TableCell className="font-medium">{list?.userId}</TableCell>
+                                <TableCell className="font-medium">
+                                      {moment(new Date(`${list?.updatedAt}`)).format('DD MMMM YYYY') || "N/A"}
                                 </TableCell>
+                                <TableCell>{list?.creditAmount}</TableCell>
+                                <TableCell>{list?.status}</TableCell>
+                                <TableCell>{list?.requestTo}</TableCell>
+                                {/* <TableCell className="text-center flex items-center justify-center">
+                                    <FaEllipsis className="text-right w-[18px] h-[18px] text-[#1E1E1E]"></FaEllipsis>
+                                </TableCell> */}
                               </TableRow>
                             ))}
                           </TableBody>

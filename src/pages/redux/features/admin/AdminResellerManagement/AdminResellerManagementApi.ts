@@ -58,6 +58,13 @@ const AdminResellerApi = baseApi.injectEndpoints({
             }),
             providesTags: ['reseller'],
         }),
+        getSingleResellerAvailableCredit: builder.query({
+            query: (email) =>({
+                url: `/reseller/single-reseller/${email}`,
+                method: "GET",
+            }),
+            providesTags: ['reseller'],
+        }),
     })
 })
 
@@ -68,7 +75,8 @@ export const {
     useGetTotalAvailableCreditsQuery,
     useGetTotalPremiumUsersForAllResellerQuery,
     useGetAllUsersForSingleResellerQuery,
-    useGetCountActiveResellersQuery
+    useGetCountActiveResellersQuery,
+    useGetSingleResellerAvailableCreditQuery
 
 
  } = AdminResellerApi;

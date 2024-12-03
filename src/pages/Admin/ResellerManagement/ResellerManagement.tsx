@@ -26,6 +26,7 @@ const ResellerManagement = () => {
     const {data: getTotalAvailableCredits} = useGetTotalAvailableCreditsQuery(undefined)
     const {data: getTotalPremiumUsersForAllReseller} = useGetTotalPremiumUsersForAllResellerQuery(undefined)
 
+    console.log(getTotalPremiumUsersForAllReseller);
     // Filter States
   const [filters, setFilters] = useState({
     resellerName: "",

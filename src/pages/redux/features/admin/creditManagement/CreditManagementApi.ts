@@ -35,6 +35,23 @@ const CreditManagementApi = baseApi.injectEndpoints({
             }),
             providesTags: ['credit'],
         }),
+        GenerateCredits: builder.mutation({
+            query: (creditInfo) =>({
+                url: "/credit/add",
+                method: "POST",
+                body: creditInfo
+            }),
+            invalidatesTags: ['credit'],
+        }),
+        transferCreditToReseller: builder.mutation({
+            query: (creditInfo) =>({
+                url: "/credit/credit-transfer",
+                method: "POST",
+                body: creditInfo
+            }),
+            invalidatesTags: ['credit'],
+        }),
+
     })
 })
 
@@ -42,7 +59,9 @@ export const {
     useGetAllCreditQuery,
     useGetAllRequestsQuery,
     useCountPendingRequestCreditsQuery,
-    useGetMonthlyCreditSummaryQuery
+    useGetMonthlyCreditSummaryQuery,
+    useGenerateCreditsMutation,
+    useTransferCreditToResellerMutation,
 
 
  } = CreditManagementApi;

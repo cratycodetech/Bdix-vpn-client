@@ -14,39 +14,31 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { IoAdd } from "react-icons/io5";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { toast } from "sonner";
 import { useQueryClient } from "react-query";
 import { Ban, Check } from "lucide-react";
+import { useCreateCreditRequestMutation } from "@/pages/redux/features/reseller/resellerCreditManagement/ResellerCreditManagementApi";
 
 type TFormData = {
   creditAmount : string,
-  Admin : string,
   resellerId : string,
+  transactionId : string,
 }
 
 const RequestCredits = () => {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<TFormData>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<TFormData>();
   const queryClient = useQueryClient();
+  const [generateCreditRequest] = useCreateCreditRequestMutation()
 
 
   //Handle submit
   const onSubmit : SubmitHandler<TFormData>= (data: any) =>{
-  const toastId = toast.loading("announcement in");
+  const toastId = toast.loading("Generating in");
   try {
-    console.log("updated data", data);
-  //   addNewServer(data)
-    toast.success("Server Added Successfully!", { id: toastId, duration: 2000 });
-    queryClient.invalidateQueries("server");
-    
+    generateCreditRequest(data)
+    toast.success("credit Generate Successfully!", { id: toastId, duration: 2000 });
+    queryClient.invalidateQueries("credit");
+    reset();
   } catch (error) {
     toast.error("Something went wrong!", { id: toastId, duration: 2000 });
   }
@@ -84,7 +76,7 @@ const RequestCredits = () => {
                     />
                     {errors.creditAmount && <p className="text-red-500">{errors.creditAmount.message}</p>}
                   </div>
-                  <div className="w-full">
+                  {/* <div className="w-full">
                       <Label htmlFor="assignTo" className="text-[#242426] text-base">
                         Assign To
                       </Label>
@@ -103,13 +95,24 @@ const RequestCredits = () => {
                           </SelectGroup>
                         </SelectContent>
                       </Select>
+                  </div> */}
+                  <div>
+                    <Label htmlFor="transactionId" className="text-[#242426] text-base">
+                        Transaction ID
+                    </Label>
+                    <Input
+                      {...register("transactionId", { required: "Please write Transaction Id" })}
+                      className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
+                      placeholder="Enter ID"
+                    />
+                    {errors.transactionId && <p className="text-red-500">{errors.transactionId.message}</p>}
                   </div>
                   <div>
                     <Label htmlFor="resellerId" className="text-[#242426] text-base">
                         Reseller ID
                     </Label>
                     <Input
-                      {...register("creditAmount", { required: "Please write credit amount" })}
+                      {...register("resellerId", { required: "Please write reseller Id" })}
                       className="border-0 border-b text-base border-[#BFBFBF] text-[#242426] focus-visible:ring-0 focus:outline-none"
                       placeholder="Enter ID"
                     />
