@@ -1,22 +1,109 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Clock, Cog, FileCog, Files, KeySquare, PencilOff, Receipt, UserRoundCog } from "lucide-react";
+import { Cog, KeySquare, UserRoundCog } from "lucide-react";
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useAppSelector } from "@/pages/redux/hook";
+import { useCurrentUser } from "@/pages/redux/features/auth/authSlice";
+import { useGetAllUsersQuery, useUpdateProfileMutation } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+type TFormData = {
+    name: string,
+    email: string,
+    phone: string,
+    photo: File | null;
+}
 
 const Settings = () => {
     const [activeSidebar, setActiveSidebar] = useState(1);
+    const currentUser = useAppSelector(useCurrentUser)
+    const {data: getAllUsers} = useGetAllUsersQuery(undefined)
+    const { register, handleSubmit, formState: { errors } } = useForm<TFormData>();
+    const [UpdateProfile] = useUpdateProfileMutation()
+
+    //filter current user
+    const singleUser = useMemo(() => {
+        return getAllUsers?.data?.find((user: { email: string | undefined; }) => user?.email === currentUser?.email);
+    }, [getAllUsers?.data, currentUser?.email]);
+
+
+    // Form submission handler
+    // const onSubmit: SubmitHandler<TFormData> = async (data) => {
+    //     const { name, email, phone, photo } = data;
+    
+    //     // Access the photo if provided and get its name
+    //     const photoName = photo?.length ? photo[0]?.name : null; 
+    
+    //     try {
+    //       if (singleUser) {
+    //         const updatedData = {
+    //           name,
+    //           email,
+    //           phone,
+    //           photo: photoName,
+    //         };
+    //         const res = await UpdateProfile({ userId: singleUser._id, userInfo: updatedData });
+    //         toast.success("Profile updated successfully");
+    //         console.log("Updated Data:", updatedData);
+    //         console.log("res", res);  // Log the response if needed
+    //       }
+    //     } catch (error: any) {
+    //       if (error.message.includes('duplicate key error')) {
+    //         toast.error("this is not your email.");
+    //       } else {
+    //         console.error("Error updating profile:", error);
+    //         toast.error("Failed to update profile. Please try again.");
+    //       }
+    //     }
+    //   };
+
+    const [photo, setPhoto] = useState<File | null>(null);
+
+  // Handle file input change
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setPhoto(file);  // Update the state with the selected file
+  };
+    const onSubmit: SubmitHandler<TFormData> = async (data) => {
+        const { name, email, phone, photo } = data;
+        const photoName = photo instanceof File ? photo?.name : null;
+        console.log(photoName);
+    
+        try {
+          if (singleUser) {
+            const updatedData = {
+              name,
+              email,
+              phone,
+              photo: photoName,
+            };
+            await UpdateProfile({ userId: singleUser._id, userInfo: updatedData });
+            toast.success("Profile updated successfully");
+          }
+        } catch (error: any) {
+          if (error.message.includes('duplicate key error')) {
+            toast.error("This is not your email.");
+          } else {
+            console.error("Error updating profile:", error);
+            toast.error("Failed to update profile. Please try again.");
+          }
+        }
+      };
+
+
+  
 
     return (
         <div className="h-screen">
@@ -54,30 +141,63 @@ const Settings = () => {
                     {activeSidebar === 1 && (
                     <Card className="content-1 px-5 py-8">
                         <h1 className="text-[#000000] text-xl font-medium">Personal Details</h1>
-                        <div className="flex items-center justify-between gap-10 mt-3">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                          <div className="flex items-center justify-between gap-10 mt-3">
                             <div className="w-full">
-                                <Label className="text-[#595959] text-base font-semibold ">Full Name</Label>
-                                <Input className="mt-1 py-6 w-full" type="text" placeholder="e.g., Jhon Doe" />
+                              <Label className="text-[#595959] text-base font-semibold">Full Name</Label>
+                              <Input
+                                className="mt-1 py-6 w-full"
+                                type="text"
+                                placeholder="e.g., Jhon Doe"
+                                {...register('name', { required: 'Full name is required' })}
+                              />
+                              {errors.name && <span className="text-red-500">{errors.name.message}</span>}
                             </div>
                             <div className="w-full">
-                                <Label className="text-[#595959] text-base font-semibold">Email Address</Label>
-                                <Input className="mt-1 py-6 w-full text-[#7E7E7E]" type="email" placeholder="e.g., example@gmail.com" />
+                              <Label className="text-[#595959] text-base font-semiFbold">Email Address</Label>
+                              <Input
+                                className="mt-1 py-6 w-full text-[#7E7E7E]"
+                                type="email"
+                                defaultValue={singleUser?.email}
+                                placeholder="e.g., example@gmail.com"
+                                {...register('email', {
+                                  required: 'Email is required',
+                                  pattern: {
+                                    value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                                    message: 'Invalid email address',
+                                  },
+                                })}
+                              />
+                              {errors.email && <span className="text-red-500">{errors.email.message}</span>}
                             </div>
-                        </div>
-                        <div className="w-full lg:w-[47%] mt-4">
+                          </div>
+                          <div className="w-full lg:w-[47%] mt-4">
                             <Label className="text-[#595959] text-base font-semibold">Phone Number</Label>
-                            <Input className="mt-1 py-6 w-full text-[#7E7E7E]" type="text" placeholder="e.g., +880 ...." />
-                        </div>
-                        <div className="mt-4 flex gap-5 items-center justify-start">
-                            <img className="w-[188px] h-[129px] rounded-md" src="https://i.ibb.co.com/68v5tCz/input.webp" alt="" />
+                            <Input
+                              className="mt-1 py-6 w-full text-[#7E7E7E]"
+                              type="text"
+                              placeholder="e.g., +880 ...."
+                              {...register('phone', { required: 'Phone number is required' })}
+                            />
+                            {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+                          </div>
+                          <div className="mt-4 flex gap-5 items-center justify-start">
+                            <img
+                              className="w-[188px] h-[129px] rounded-md"
+                              src="https://i.ibb.co.com/68v5tCz/input.webp"
+                              alt="Input Image"
+                            />
                             <div className="grid w-full max-w-sm items-center gap-1.5">
-                              <Label htmlFor="picture">Upload your logo</Label>
-                              <Input id="picture" type="file" />
+                              <Label htmlFor="photo">Upload your logo</Label>
+                              <Input id="photo" type="file" onChange={handleFileChange} />
                             </div>
-                        </div>
-                        <div className="flex justify-end">
-                            <Button className="mt-5 bg-[#4406CB] text-white">Save Settings</Button>
-                        </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <Button className="mt-5 bg-[#4406CB] text-white" type="submit">
+                              Save Settings
+                            </Button>
+                          </div>
+                        </form>
                     </Card>
                     )}
 
@@ -175,8 +295,6 @@ const Settings = () => {
                         <div className="flex justify-end">
                             <Button className="mt-5 bg-[#4406CB] text-white">Save Settings</Button>
                         </div>
-
-                        
                     </Card>
                     )}
                 </div>

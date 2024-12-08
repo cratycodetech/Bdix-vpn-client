@@ -16,7 +16,7 @@ import {
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
 import AddServer from "./AddServer";
-import { useDeleteServerMutation, useGetAllServerQuery, useGetCountActiveServerQuery, useUpdateServerStatusMutation } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useCheckVpnServerStatusQuery, useConnectServerMutation, useDeleteServerMutation, useDisconnectServerMutation, useGetAllServerQuery, useGetAServerActiveServerQuery, useGetAServerActiveUserQuery, useGetCountActiveServerQuery, useUpdateServerStatusMutation } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import moment from "moment";
 import { usePDF } from 'react-to-pdf';
 import Swal from 'sweetalert2'
@@ -30,7 +30,10 @@ import {
     ResponsiveContainer,
   } from "recharts";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useGetAllUsersQuery } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
+import { useAppSelector } from "@/pages/redux/hook";
+import { useCurrentUser } from "@/pages/redux/features/auth/authSlice";
 
   const data = [
     { name: "Jan", upload: 75, download: 45 },
@@ -50,7 +53,54 @@ const ServerMonitoring = () => {
     const [deleteServer] = useDeleteServerMutation()
     const [updateServerStatus] = useUpdateServerStatusMutation()
     const [servers, setServers] = useState(getAllServer?.data || []);
+    const { data: getAServerActiveUser} = useGetAServerActiveUserQuery(undefined);
+    const {data: checkServerStatus} = useCheckVpnServerStatusQuery(undefined)
+
+    const currentUser = useAppSelector(useCurrentUser)
+    const {data: getAllUsers} = useGetAllUsersQuery(undefined)
+
+    //filter current user
+    const singleUser = useMemo(() => {
+        if (!getAllUsers?.data || !currentUser?.email) {
+          console.warn("User data or current user email is not available yet.");
+          return null; 
+        }
+        return getAllUsers.data.find((user: { email: string | undefined }) => user?.email === currentUser.email) || null;
+      }, [getAllUsers?.data, currentUser?.email]);
+      
+      // Handle userId extraction with validation
+      const userId = useMemo(() => {
+        if (!singleUser || !singleUser._id) {
+          console.warn("Single user or user ID is not available.");
+          return ''; 
+        }
+        return singleUser._id;
+      }, [singleUser]);
+
+    //connect server
+    const [connectVPNServer] = useConnectServerMutation()
+    const [serverInfo, setServerInfo] = useState({
+        userId : userId,
+        username: "root",
+        password: "vpnserver123456",
+        serverIP: "5.161.52.6",
+        protocol: "openvpn", 
+      });
     
+
+    const [disconnectVPNServer] = useDisconnectServerMutation()
+    const [disconnectInfo, setDisconnectInfo] = useState({
+        userId: userId,
+        username: "root",
+        password: "vpnserver123456",
+      });
+      
+
+
+      console.log("status",checkServerStatus);
+
+    
+      console.log("active user",getAServerActiveUser);
 
     //handle delete
     const handleDelete = async(id: string) => {
@@ -94,6 +144,31 @@ const ServerMonitoring = () => {
     const handleServerDetails = async(list: any) => {
         setSelectedServer(list)
     }
+
+    //connect vpn
+    const handleConnectVpn = async () => {
+        try {
+          const response = await connectVPNServer(serverInfo).unwrap();
+          console.log("response",response);
+          alert(response.message); // Notify success
+        } catch (error: any) {
+          console.error('Connection Error:', error);
+          alert(error.data.message || 'Failed to connect to the VPN server');
+        }
+      };
+
+    //connect vpn
+    const handleDisconnectVpn = async () => {
+        try {
+          const response = await disconnectVPNServer(disconnectInfo).unwrap();
+          console.log("response",response);
+          alert(response.message); // Notify success
+        } catch (error: any) {
+          console.error('Connection Error:', error);
+          alert(error.data.message || 'Failed to connect to the VPN server');
+        }
+      };
+
 
 
 
@@ -243,6 +318,9 @@ const ServerMonitoring = () => {
                     </Card>
                 </div>
             </div>
+
+            <Button className="mx-5" onClick={handleConnectVpn}>Connect VPN</Button>
+            <Button onClick={handleDisconnectVpn}>Disconnect VPN</Button>
 
             <div className="mb-5 flex items-center justify-end">
                 

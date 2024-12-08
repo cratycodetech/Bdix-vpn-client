@@ -2,7 +2,7 @@
 import {
     Card,
   } from "@/components/ui/card"
-import { Eye, Filter, RefreshCcw, Share, Trash2 } from "lucide-react";
+import { Filter, Share } from "lucide-react";
 import { FaEllipsis } from "react-icons/fa6";
 import {
     Table,
@@ -14,11 +14,12 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from "@/components/ui/button";
-import { useDeleteServerMutation, useGetAllServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useGetAllServerQuery, useGetAServerActiveUserQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import moment from "moment";
 import { usePDF } from 'react-to-pdf';
-import Swal from 'sweetalert2'
+
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 
 
 
@@ -26,29 +27,24 @@ import { Link } from "react-router-dom";
 const ResellerServerMonitoring = () => {
     const {data: getAllServer} = useGetAllServerQuery(undefined)
     const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
-    const [deleteServer] = useDeleteServerMutation()
+    const { data: getAServerActiveUser} = useGetAServerActiveUserQuery(undefined);
 
-    //handle delete
-    const handleDelete = async(id: string) => {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then( async(result) => {
-        if (result.isConfirmed) {
-          await deleteServer(id).unwrap();
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success"
-          });
-        }
-      });
-    }
+   // Combine data
+  const combinedData = useMemo(() => {
+    return getAllServer?.data?.map((server: any) => {
+      const activeUsers = getAServerActiveUser?.users?.filter(
+        (user: any) => user?.serverIP === server?.ipAddress
+      );
+
+      return {
+        ...server,
+        activeUsers, // All users matching the server's IP
+        userCount: activeUsers?.length, // Count of active users
+      };
+    });
+  }, [getAllServer?.data, getAServerActiveUser?.users]);
+  console.log(combinedData);
+
 
 
     return (
@@ -93,22 +89,19 @@ const ResellerServerMonitoring = () => {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {getAllServer?.data?.map((list: any) => (
+                            {combinedData?.map((list: any) => (
                               <TableRow key={list._id}>
                                 <TableCell className="">{list.serverName}</TableCell>
                                 <TableCell>{list?.status}</TableCell>
-                                <TableCell>{list?.CPUallocation}</TableCell>
-                                <TableCell>{list?.memoryAllocation}</TableCell>
+                                <TableCell>{list?.userCount}</TableCell>
+                                <TableCell>N/A</TableCell>
                                 <TableCell>
                                 {moment(new Date(`${list?.updatedAt}`)).format('DD MMMM YYYY') || "N/A"}
                                 </TableCell>
                                 <TableCell className="">
                                     <div className="flex gap-1 items-center justify-center">
                                     <Link to={`/dashboard/reseller-server-monitoring/server-details/${list._id}`}><FaEllipsis className="w-[25px] h-[25px] text-[#1E1E1E]"></FaEllipsis></Link>
-                                    {/* <RefreshCcw className="border-r-2 pr-1 w-[25px] h-[25px] text-[#1E1E1E]"></RefreshCcw>
-                                    <Trash2 onClick={() => handleDelete(list?._id)} className="w-[25px] h-[25px] text-[#1E1E1E]"></Trash2> */}
                                     </div>
-                                    
                                 </TableCell>
                               </TableRow>
                             ))}

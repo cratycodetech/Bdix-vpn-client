@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/card";
 import { FaEllipsis } from "react-icons/fa6";
@@ -7,12 +8,11 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { Filter, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePDF } from "react-to-pdf";
-import { useGetAllServerQuery, useGetSingleServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
+import { useGetAllServerQuery, useGetAServerActiveUserQuery, useGetSingleServerQuery } from "@/pages/redux/features/admin/serverMonitoring/serverMonitoringApi";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
     Breadcrumb,
-    BreadcrumbEllipsis,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
@@ -20,6 +20,9 @@ import {
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb"
 import { useParams } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { useGetAllUsersQuery, useGetASingleUserQuery } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
+import { useQueries } from "react-query";
 
 //data for chart
 const data = [
@@ -34,10 +37,49 @@ const data = [
 
 const ResellerServerDetails = () => {
     const { toPDF, targetRef } = usePDF({filename: 'export.pdf'});
-    const {data: getAllServer} = useGetAllServerQuery(undefined)
     const { id } = useParams();
+    const {data: getAllServer} = useGetAllServerQuery(undefined)
     const {data: getSingleServer} = useGetSingleServerQuery(id)
-    console.log(getSingleServer);
+    const { data: getAServerActiveUser} = useGetAServerActiveUserQuery(undefined);
+    const {data: getAllUsers} = useGetAllUsersQuery(undefined)
+
+
+    //  Combine data
+    const combinedData = useMemo(() => {
+      if (!getSingleServer || !getAServerActiveUser) return null;
+    
+      // Assuming getSingleServer.data is an object
+      const server = getSingleServer.data;
+    
+      // Filter active users for this specific server
+      const activeUsers = getAServerActiveUser.users.filter(
+        (user: any) => user.serverIP === server.ipAddress
+      );
+    
+      // Return the combined object
+      return {
+        ...server,
+        activeUsers, // All users matching the server's IP
+      };
+    }, [getSingleServer?.data, getAServerActiveUser?.users]);
+
+    // Filter getAllUsers data using the userId from combinedData.activeUsers
+    const filteredUsers = useMemo(() => {
+      if (!combinedData || !getAllUsers?.data) return [];
+    
+      // Extract the userIds from activeUsers in combinedData
+      const userIds = combinedData.activeUsers.map((user: any) => user.userId);
+    
+      // Filter the getAllUsers data based on userId match
+      return getAllUsers?.data?.filter((user: any) => userIds.includes(user._id));
+    }, [combinedData, getAllUsers?.data]);
+    
+    console.log("filteredUsers", filteredUsers); 
+   
+  
+    
+
+
 
     return (
         <div>
@@ -190,10 +232,10 @@ const ResellerServerDetails = () => {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {getAllServer?.data?.map((list: any) => (
+                            {filteredUsers?.map((list: any) => (
                               <TableRow key={list._id}>
-                                <TableCell className="">{list.serverName}</TableCell>
-                                <TableCell>{list?.status}</TableCell>
+                                <TableCell className="">{list._id}</TableCell>
+                                <TableCell>{list?.email}</TableCell>
                                 <TableCell>{list?.CPUallocation}</TableCell>
                                 <TableCell>{list?.memoryAllocation}</TableCell>
                                 <TableCell>{list?.status}</TableCell>

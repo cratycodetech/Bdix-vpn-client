@@ -64,6 +64,37 @@ const serverApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['server'],
         }),
+        connectServer: builder.mutation({
+            query: (serverInfo) =>({
+                url: "/server/connect",
+                method: "POST",
+                body: serverInfo
+            }),
+            invalidatesTags: ['server'],
+        }),
+        disconnectServer: builder.mutation({
+            query: (serverInfo) =>({
+                url: "/server/disconnect",
+                method: "POST",
+                body: serverInfo
+            }),
+            invalidatesTags: ['server'],
+        }),
+        getAServerActiveUser: builder.query({
+            query: () => ({
+              url: '/server/active-users',
+              method: 'GET', 
+            }),
+            providesTags: ['server'],
+        }),
+        checkVpnServerStatus: builder.query({
+            query: () => ({
+              url: '/server/status',
+              method: 'GET', 
+            }),
+            providesTags: ['server'],
+        }),
+
     })
 })
 
@@ -75,5 +106,9 @@ export const {
     useUpdateServerMutation,
     useGetAllServerStatusQuery,
     useGetCountActiveServerQuery,
-    useUpdateServerStatusMutation
+    useUpdateServerStatusMutation,
+    useConnectServerMutation,
+    useDisconnectServerMutation,
+    useGetAServerActiveUserQuery,
+    useCheckVpnServerStatusQuery
  } = serverApi;
