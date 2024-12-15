@@ -1,5 +1,11 @@
 import { Menu } from "lucide-react";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger,} from "@/components/ui/navigation-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../redux/hook";
 import { Button } from "@/components/ui/button";
@@ -8,45 +14,48 @@ import useReseller from "@/components/hooks/useReseller";
 import { toast } from "sonner";
 import { logout } from "../redux/features/auth/authSlice";
 
-
-
-
 const Navbar = () => {
-  const {isAdmin} = useAdmin()
-  const {isReseller} = useReseller()
+  const { isAdmin } = useAdmin();
+  const { isReseller } = useReseller();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const isOtpVerified = localStorage.getItem("isOtpVerified") === "true";  // get data from localStorage
+  const isOtpVerified = localStorage.getItem("isOtpVerified") === "true"; // get data from localStorage
   console.log("isOtpVerified", isOtpVerified);
 
-
-
   //handle logout
-  const handleLogout = () =>{
-      try {
-        dispatch(logout())
-        toast.success("Logout successful!");
-        // set the isOtpVerified value in localStorage
-        localStorage.setItem("isOtpVerified", "false");
-        navigate("/login")
-      } catch (error) {
-        console.error("Logout failed", error);
-      }
-  }
+  const handleLogout = () => {
+    try {
+      dispatch(logout());
+      toast.success("Logout successful!");
+      // set the isOtpVerified value in localStorage
+      localStorage.setItem("isOtpVerified", "false");
+      localStorage.removeItem("googleEmail");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
+  const getUser = localStorage.getItem("isOtpVerified");
+  const getUserFromGoogle = localStorage.getItem("googleEmail");
 
   return (
     <header className="bg-slate-100 text-[#999999]  shadow mx-auto py-5 fixed left-0 right-0 top-0 z-50">
       <nav className="h-full max-w-[90%] px-[12px] mx-auto flex gap-1 justify-between items-center">
-            <div className="flex gap-2 items-center justify-center">
-                <div>
-                    <img src="https://i.ibb.co.com/DfkFyVt/Rectangle.webp" alt="" />
-                </div>
-                <div>
-                    <h1 className="font-semibold text-[#22c55e] text-xl">BdiX <span className="font-bold text-[#092857]">VPN</span></h1>
-                </div>
+        <NavLink to="/">
+          <div className="flex gap-2 items-center justify-center">
+            <div>
+              <img src="https://i.ibb.co.com/DfkFyVt/Rectangle.webp" alt="" />
             </div>
+            <div>
+              <h1 className="font-semibold text-[#22c55e] text-xl">
+                BdiX <span className="font-bold text-[#092857]">VPN</span>
+              </h1>
+            </div>
+          </div>
+        </NavLink>
+
         <NavigationMenu className="lg:hidden ">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -56,21 +65,76 @@ const Navbar = () => {
               <NavigationMenuContent>
                 <ul className="font-semibold p-2 w-[134px]">
                   <li>
-                    <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/">Home</NavLink>
+                    <NavLink
+                      className={({ isActive }) =>
+                        `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                          isActive
+                            ? "text-[#000000] underline underline-offset-8"
+                            : ""
+                        }`
+                      }
+                      to="/"
+                    >
+                      Home
+                    </NavLink>
                   </li>
                   <li>
-                    <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/aboutUs">About us</NavLink>
+                    <NavLink
+                      className={({ isActive }) =>
+                        `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                          isActive
+                            ? "text-[#000000] underline underline-offset-8"
+                            : ""
+                        }`
+                      }
+                      to="/aboutUs"
+                    >
+                      About us
+                    </NavLink>
                   </li>
-                  {(isAdmin || isReseller && isOtpVerified) && (
+                  {(isAdmin || (isReseller && isOtpVerified)) && (
                     <li>
-                      <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
+                      <NavLink
+                        className={({ isActive }) =>
+                          `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                            isActive
+                              ? "text-[#000000] underline underline-offset-8"
+                              : ""
+                          }`
+                        }
+                        to="/dashboard"
+                      >
+                        Dashboard
+                      </NavLink>
                     </li>
                   )}
                   <li>
-                    <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/servers">Servers</NavLink>
+                    <NavLink
+                      className={({ isActive }) =>
+                        `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                          isActive
+                            ? "text-[#000000] underline underline-offset-8"
+                            : ""
+                        }`
+                      }
+                      to="/servers"
+                    >
+                      Servers
+                    </NavLink>
                   </li>
                   <li>
-                    <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/plans">Plans</NavLink>
+                    <NavLink
+                      className={({ isActive }) =>
+                        `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                          isActive
+                            ? "text-[#000000] underline underline-offset-8"
+                            : ""
+                        }`
+                      }
+                      to="/plans"
+                    >
+                      Plans
+                    </NavLink>
                   </li>
                 </ul>
               </NavigationMenuContent>
@@ -80,25 +144,92 @@ const Navbar = () => {
 
         <div className="hidden lg:block">
           <ul className="flex gap-5 font-semibold text-lg">
-            <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/">Home</NavLink>
-            <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/aboutUs">About Us</NavLink>
-            {( isAdmin || isReseller && isOtpVerified) && (
+            <NavLink
+              className={({ isActive }) =>
+                `transition-all hover:underline underline-offset-8 hover:text-[#000000] ${
+                  isActive ? "text-[#000000] underline underline-offset-8" : ""
+                }`
+              }
+              to="/"
+            >
+              Home
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `transition-all hover:underline underline-offset-8 hover:text-[#000000] ${
+                  isActive ? "text-[#000000] underline underline-offset-8" : ""
+                }`
+              }
+              to="/aboutUs"
+            >
+              About Us
+            </NavLink>
+            {(isAdmin || (isReseller && isOtpVerified)) && (
               <li>
-                <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/dashboard">Dashboard</NavLink>
+                <NavLink
+                  className={({ isActive }) =>
+                    `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                      isActive
+                        ? "text-[#000000] underline underline-offset-8"
+                        : ""
+                    }`
+                  }
+                  to="/dashboard"
+                >
+                  Dashboard
+                </NavLink>
               </li>
             )}
-            <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/servers">Servers</NavLink>
-            <NavLink className={({ isActive }) =>`transition-all hover:underline underline-offset-8 hover:text-[#000000] ${  isActive ? 'text-[#000000] underline underline-offset-8' : ''}`} to="/plans">Plans</NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `transition-all hover:underline underline-offset-8 hover:text-[#000000] ${
+                  isActive ? "text-[#000000] underline underline-offset-8" : ""
+                }`
+              }
+              to="/servers"
+            >
+              Servers
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `transition-all hover:underline underline-offset-8 hover:text-[#000000] ${
+                  isActive ? "text-[#000000] underline underline-offset-8" : ""
+                }`
+              }
+              to="/plans"
+            >
+              Plans
+            </NavLink>
           </ul>
         </div>
 
         <div className="flex gap-2 justify-center items-center">
-          <NavLink to="/register">
-            <Button className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6" onClick={handleLogout}>Register</Button>
-          </NavLink>
-          <Button className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6" onClick={handleLogout}>Logout</Button>
-
-
+          {getUser === "true" || getUserFromGoogle ? (
+            <>
+              <Button
+                className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/register">
+                <Button
+                  className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6"
+                  onClick={handleLogout}
+                >
+                  Register
+                </Button>
+              </NavLink>
+              <NavLink to="/login">
+                <Button className="rounded-md text-lg font-semibold bg-[#4406CB] text-white py-6">
+                  Login
+                </Button>
+              </NavLink>
+            </>
+          )}
         </div>
       </nav>
     </header>
