@@ -25,7 +25,11 @@ type TFormData = {
 };
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<TFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TFormData>();
   const [showPassword, setShowPassword] = useState(false);
   const [login] = useLoginMutation();
   const [sendOTP] = useSendOTPMutation();
@@ -129,9 +133,14 @@ const Login = () => {
       const loggedUser = result?.user;
 
       if (!loggedUser?.email || !loggedUser?.displayName) {
-        toast.error("Google login failed. Invalid user information.", { id: toastId });
+        toast.error("Google login failed. Invalid user information.", {
+          id: toastId,
+        });
         return;
       }
+
+      console.log("googloggedUserle", loggedUser);
+      console.log("google", result);
 
       const userInfo = {
         name: loggedUser.displayName,
@@ -147,6 +156,8 @@ const Login = () => {
       };
 
       dispatch(setUser({ user: userInfo, token }));
+      localStorage.setItem("googleEmail", loggedUser.email);
+
       toast.success("Google login successful.", { id: toastId });
       navigate("/");
     } catch (error: any) {
@@ -188,7 +199,7 @@ const Login = () => {
               {errors.email && (
                 <p className="text-sm text-red-500">{errors.email.message}</p>
               )}
-            </div> 
+            </div>
 
             {/* Password Field */}
             <div className="space-y-2">
@@ -196,7 +207,10 @@ const Login = () => {
                 <Label htmlFor="password" className="text-base leading-5">
                   Password
                 </Label>
-                <a href="/forgotPassword" className="text-xs text-red-800 underline hover:underline">
+                <a
+                  href="/forgotPassword"
+                  className="text-xs text-red-800 underline hover:underline"
+                >
                   Forget Password?
                 </a>
               </div>
@@ -225,7 +239,9 @@ const Login = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-500">{errors.password.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
