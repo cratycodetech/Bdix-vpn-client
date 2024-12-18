@@ -46,10 +46,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { toast } from "sonner";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetAllUsersQuery } from "@/pages/redux/features/admin/adminUserManagement/adminUserManagementApi";
 import { useAppSelector } from "@/pages/redux/hook";
 import { useCurrentUser } from "@/pages/redux/features/auth/authSlice";
+// import axios from "axios";
 
 const data = [
   { name: "Jan", upload: 75, download: 45 },
@@ -83,20 +84,18 @@ const ServerMonitoring = () => {
       return null;
     }
     return (
-      getAllUsers?.data.find(
+      getAllUsers?.data?.find(
         (user: { email: string | undefined }) =>
-          user?.email === currentUser.email
+          user?.email === currentUser?.email
       ) || null
     );
   }, [getAllUsers?.data, currentUser?.email]);
-
-  console.log("singleUser", singleUser);
 
   // Handle userId extraction with validation
   const userId = useMemo(() => {
     if (!singleUser || !singleUser?._id) {
       console.warn("Single user or user ID is not available.");
-      return "";
+      return null;
     }
     return singleUser?._id;
   }, [singleUser]);
@@ -118,9 +117,18 @@ const ServerMonitoring = () => {
     password: "vpnserver123456",
   });
 
-  console.log("status", checkServerStatus);
-
-  console.log("active user", getAServerActiveUser);
+  useEffect(() => {
+    if (userId) {
+      setServerInfo((prev) => ({
+        ...prev,
+        userId,
+      }));
+      setDisconnectInfo((prev) => ({
+        ...prev,
+        userId,
+      }));
+    }
+  }, [userId]);
 
   //handle delete
   const handleDelete = async (id: string) => {
@@ -174,10 +182,9 @@ const ServerMonitoring = () => {
   const handleConnectVpn = async () => {
     try {
       const response = await connectVPNServer(serverInfo).unwrap();
-      console.log("response", response);
+
       alert(response.message); // Notify success
     } catch (error: any) {
-      console.error("Connection Error:", error);
       alert(error.data.message || "Failed to connect to the VPN server");
     }
   };
@@ -186,10 +193,14 @@ const ServerMonitoring = () => {
   const handleDisconnectVpn = async () => {
     try {
       const response = await disconnectVPNServer(disconnectInfo).unwrap();
-      console.log("response", response);
-      alert(response.message); // Notify success
+      alert(response.message);
+      if (response.ok) {
+        alert(response.message);
+      } else {
+        const errorData = await response.json();
+        console.log("errorData", errorData);
+      }
     } catch (error: any) {
-      console.error("Connection Error:", error);
       alert(error.data.message || "Failed to connect to the VPN server");
     }
   };
