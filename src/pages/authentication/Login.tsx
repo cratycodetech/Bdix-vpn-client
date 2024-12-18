@@ -139,9 +139,6 @@ const Login = () => {
         return;
       }
 
-      console.log("googloggedUserle", loggedUser);
-      console.log("google", result);
-
       const userInfo = {
         name: loggedUser.displayName,
         email: loggedUser.email,
@@ -157,7 +154,6 @@ const Login = () => {
 
       dispatch(setUser({ user: userInfo, token }));
       localStorage.setItem("googleEmail", loggedUser.email);
-
       toast.success("Google login successful.", { id: toastId });
       navigate("/");
     } catch (error: any) {

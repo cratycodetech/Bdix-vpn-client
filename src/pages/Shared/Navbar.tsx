@@ -92,22 +92,29 @@ const Navbar = () => {
                       About us
                     </NavLink>
                   </li>
-                  {(isAdmin || (isReseller && isOtpVerified)) && (
-                    <li>
-                      <NavLink
-                        className={({ isActive }) =>
-                          `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
-                            isActive
-                              ? "text-[#000000] underline underline-offset-8"
-                              : ""
-                          }`
-                        }
-                        to="/dashboard"
-                      >
-                        Dashboard
-                      </NavLink>
-                    </li>
+                  {getUser === "true" || getUserFromGoogle ? (
+                    <>
+                      {(isAdmin || (isReseller && isOtpVerified)) && (
+                        <li>
+                          <NavLink
+                            className={({ isActive }) =>
+                              `transition-all hover:underline underline-offset-8 text-[#999999] hover:text-[#000000] ${
+                                isActive
+                                  ? "text-[#000000] underline underline-offset-8"
+                                  : ""
+                              }`
+                            }
+                            to="/dashboard"
+                          >
+                            Dashboard
+                          </NavLink>
+                        </li>
+                      )}
+                    </>
+                  ) : (
+                    ""
                   )}
+
                   <li>
                     <NavLink
                       className={({ isActive }) =>

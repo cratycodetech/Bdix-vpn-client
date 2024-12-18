@@ -9,7 +9,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const VerifyOtp = () => {
-  const { handleSubmit, control, formState: { errors },} = useForm<{ otp: string }>();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<{ otp: string }>();
   const [verifyOTP] = useVerifyOTPMutation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,27 +32,21 @@ const VerifyOtp = () => {
     const toastId = toast.loading("Verifying OTP...");
 
     try {
-        const response = await verifyOTP({ email, otp: data.otp }).unwrap();
-        // Set OTP verification status
-        setIsOtpVerified(true);
-    
-        // set the isOtpVerified value
-        localStorage.setItem("isOtpVerified", "true");
-        toast.success(response.message, { id: toastId });
-        navigate("/");
+      const response = await verifyOTP({ email, otp: data.otp }).unwrap();
+      setIsOtpVerified(true);
+      localStorage.setItem("isOtpVerified", "true");
+      toast.success(response.message, { id: toastId });
+      navigate("/dashboard");
     } catch (error: any) {
       console.error("Error verifying OTP:", error);
       toast.error(error?.data?.message || "Invalid OTP.", { id: toastId });
     }
   };
-  console.log(isOtpVerified);
 
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="px-7 py-5 rounded-lg w-full max-w-md border-2">
-        <h2 className="text-3xl font-semibold text-center mb-3">
-          Verify OTP
-        </h2>
+        <h2 className="text-3xl font-semibold text-center mb-3">Verify OTP</h2>
         <p className="text-center text-gray-400 mb-4">
           Enter the OTP sent to your email: <strong>{email}</strong>
         </p>
