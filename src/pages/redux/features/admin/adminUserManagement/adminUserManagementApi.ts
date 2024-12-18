@@ -31,7 +31,7 @@ const adminUserManagementApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { role },
       }),
-      invalidatesTags: ["premiumUser"],
+      invalidatesTags: ["user"],
     }),
   }),
 });
