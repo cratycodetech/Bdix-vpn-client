@@ -61,6 +61,16 @@ const data = [
   { name: "Jun", upload: 80, download: 45 },
 ];
 
+export interface ActiveVpnUser {
+  _id: string;
+  userId: string;
+  serverIP: string;
+  userStatus: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 const ServerMonitoring = () => {
   const [selectedServer, setSelectedServer] = useState<any>(null);
   const { data: getAllServer } = useGetAllServerQuery(undefined);
@@ -91,7 +101,6 @@ const ServerMonitoring = () => {
     );
   }, [getAllUsers?.data, currentUser?.email]);
 
-  // Handle userId extraction with validation
   const userId = useMemo(() => {
     if (!singleUser || !singleUser?._id) {
       console.warn("Single user or user ID is not available.");
@@ -100,7 +109,6 @@ const ServerMonitoring = () => {
     return singleUser?._id;
   }, [singleUser]);
 
-  //connect server
   const [connectVPNServer] = useConnectServerMutation();
   const [serverInfo, setServerInfo] = useState({
     userId: userId,
@@ -189,16 +197,26 @@ const ServerMonitoring = () => {
     }
   };
 
-  //connect vpn
   const handleDisconnectVpn = async () => {
     try {
-      const response = await disconnectVPNServer(disconnectInfo).unwrap();
-      alert(response.message);
-      if (response.ok) {
-        alert(response.message);
+      const userId = disconnectInfo.userId;
+      if (getAServerActiveUser?.users) {
+        const activeUser = getAServerActiveUser?.users.find(
+          (user: ActiveVpnUser) => user?.userId === userId
+        );
+
+        if (activeUser) {
+          const response = await disconnectVPNServer(disconnectInfo).unwrap();
+          alert(response.message);
+        } else {
+          console.warn("Vpn is not connected from this user");
+          alert("Vpn is not connected from this user");
+        }
       } else {
-        const errorData = await response.json();
-        console.log("errorData", errorData);
+        console.warn(
+          "getAServerActiveUser data or users array is not available."
+        );
+        alert("User data unavailable. Disconnection failed.");
       }
     } catch (error: any) {
       alert(error.data.message || "Failed to connect to the VPN server");
